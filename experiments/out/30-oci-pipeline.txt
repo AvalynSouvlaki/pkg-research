@@ -1,6 +1,6 @@
 # oci pipeline
 
-date_utc   2026-09-02T09:56:06Z
+date_utc   2026-09-02T10:02:01Z
 registry   zot 1.1.0 on 127.0.0.1:15000
 oras       1.2.2
 subject    127.0.0.1:15000/opk/hello:1.0.0-1-x86_64-linux

@@ -1,10 +1,10 @@
 # mirror
 
-date_utc      2026-09-02T09:39:33Z
+date_utc      2026-09-02T10:02:10Z
 source        127.0.0.1:15002/opk/mirrordemo:1.0.0-1-x86_64-linux
 mirror        127.0.0.1:15003/opk/mirrordemo:1.0.0-1-x86_64-linux
-subject       sha256:ec8bd86b5652cd6d1a62fddd7dfd307b721568310de6e5c1e205401b2877327b
-fallback tag  sha256-ec8bd86b5652cd6d1a62fddd7dfd307b721568310de6e5c1e205401b2877327b
+subject       sha256:6b3cfdf86ca69dc45f02e9566748e6d6b4c62a8dda2c0130aec7e6a2f3444045
+fallback tag  sha256-6b3cfdf86ca69dc45f02e9566748e6d6b4c62a8dda2c0130aec7e6a2f3444045
 referrers     source 2, mirror 2
 signed        yes
 

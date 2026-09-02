@@ -255,6 +255,30 @@ The section-reference check proves a cited `§N` **exists**, not that it is the
 right section. Two citations in this pass pointed at a real section that was
 the wrong one, and only reading caught them.
 
+### Pass 6: the checkers themselves, 2026-09-02
+
+**Question**: the checks now carry the review. ⛔ **What are the checks not
+looking at, and what did they quietly exclude?**
+
+| swept | found |
+| --- | --- |
+| ⛔ what the file walk excludes | ⛔ **a document was invisible to every check.** Both checkers pruned any directory named `references`, meaning to skip the mined corpus at the repository root. It also pruned `docs/history/references/`, a 16 KB authored page in this tree. Pruning is by path now, and the first run over the restored file found a broken citation in it. |
+| ⭐ the reachability rule | ⛔ **it tested the weaker property.** "A page nothing links to" is satisfied by two orphan pages that link to each other. The deliverable's contract is that an implementer reads `README.md` and follows its links, so the check now walks that graph from `README.md`. Guard-mutation tested with exactly that orphan pair. |
+| ⛔ the evidence files themselves | ⛔ **three were corrupt.** Each experiment `tee`s its own `out/*.txt`; re-running one with a shell redirect to that path gives the file two writers, and the result is correct output followed by a block of NUL bytes. Every check still passed, because nothing read past the counts. |
+
+⭐ **The pattern across passes 4, 5 and 6 is one thing.** Every defect was a
+check that reported success over something it was not looking at: a section
+check that matched no citations, a count check that read one document of three,
+a file walk that skipped a page, a reachability rule that tested a weaker
+property, and evidence files nothing read to the end. ⛔ **A green check is a
+claim about coverage, and coverage is the part that was never stated.** That is
+why every check in `tools/check-consistency.sh` now prints its denominator.
+
+⚠ **What pass 6 did not do**: run the experiments on a second host. Every
+number in this tree is still one machine on one day, and
+[`../open-questions.md`](../open-questions.md) Q5 carries the job that would
+change that.
+
 ---
 
 ## 5. What is NOT here

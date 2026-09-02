@@ -150,7 +150,7 @@ purpose, because a shipped defect is worth more than an absence.
 | ⭐ **file mode decided by content, not by name** | same | [`../../format/build-manifest.md`](../../format/build-manifest.md) §6 |
 | ⭐ **tar and gzip normalisation, with the gzip header pinned separately** | same | [`../../format/artifact-layout.md`](../../format/artifact-layout.md) §6 |
 | ⭐ **a mandatory `reason` field for building rather than pinning** | `builds/packages/*/build.toml` | ⭐ [`../../workflows/package-author.md`](../../workflows/package-author.md) §1 |
-| ⭐ **two hashes with distinct jobs** | era 3 `docs/FORMAT.md` | ⭐ [`../../decisions/0006-two-hashes.md`](../../decisions/0006-two-hashes.md) |
+| ⭐ **two hashes with distinct jobs** | era 3 `soarpkgs/docs/FORMAT.md` | ⭐ [`../../decisions/0006-two-hashes.md`](../../decisions/0006-two-hashes.md) |
 | ⭐ **a changed hash on an unchanged version is a signal** | era 3 update workflow body | ⭐ [`../../ci/update-automation.md`](../../ci/update-automation.md) §6 |
 | ⭐ **resolve, then hashfill, then validate, then commit** | era 3 `update-packages.yaml` | ⛔ a pinned URL with no hash must not reach a commit |
 | ⭐ **only 404 and 410 mean a link is dead** | era 3 `validate.yaml` | ⭐ [`../../ci/pull-requests.md`](../../ci/pull-requests.md) §3.1 |

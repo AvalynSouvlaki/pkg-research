@@ -1,7 +1,7 @@
 # static linkage matrix
 
 host      Linux 6.18.44-fc-v22 x86_64
-date_utc  2026-09-02T08:27:22Z
+date_utc  2026-09-02T10:00:47Z
 epoch     SOURCE_DATE_EPOCH=1700000000
 probe     tools/elfprobe.py (reads the artifact, not the compiler)
 
@@ -27,3 +27,5 @@ D           | gdc -static glibc (EXPECTED LINK FAILURE) |          - | -        
 PT_INTERP '-' means no dynamic loader is named: the binary runs on a
 host that supplies none. Any other value is the exact path the host
 must provide.
+
+written: /home/user/pkg-research/experiments/out/20-static-matrix.txt

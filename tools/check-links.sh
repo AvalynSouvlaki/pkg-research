@@ -10,8 +10,9 @@
 #      finds a 404, which teaches them to stop following links.
 #   2. A cited path that does not exist. A document naming a file is making a
 #      claim, and an unchecked claim rots the first time something is renamed.
-#   3. A page nothing links to. Unlinked means unread, which means
-#      uncorrected, which is the state every stale document passes through.
+#   3. A page unreachable from README.md. The deliverable's contract is that
+#      an implementer reads only the README and follows its links, so a page
+#      no path from README reaches is a page that contract does not deliver.
 #   4. Banned vocabulary: words that assert quality instead of demonstrating
 #      it, and em dashes, which this tree does not use.
 #
@@ -52,7 +53,24 @@ as_json = os.environ.get("JSON") == "1"
 # Files this tree authors. The mined corpus under references/ is somebody
 # else's text and is deliberately not held to these rules.
 DOC_ROOTS = ("README.md", "AGENTS.md", "CHANGELOG.md", "SECURITY.md")
-SKIP_DIRS = {".git", ".tmp", "references", "node_modules", "out", ".work"}
+# ⛔ Prune by PATH, not by basename. Pruning every directory named
+# "references" also pruned docs/history/references/, a 16 KB authored
+# document in this tree, which was silently exempt from every check here
+# until review pass 6 counted the files by hand. The mined corpus this
+# means to skip is the one at the repository root.
+SKIP_NAMES = {".git", ".tmp", "node_modules", "out", ".work"}
+SKIP_PATHS = {os.path.normpath("./references")}
+
+
+def prune(dirpath, dirnames):
+    keep = []
+    for d in dirnames:
+        if d in SKIP_NAMES:
+            continue
+        if os.path.normpath(os.path.join(dirpath, d)) in SKIP_PATHS:
+            continue
+        keep.append(d)
+    return keep
 
 BANNED_WORDS = [
     "seamless", "blazing", "effortless", "robust", "powerful", "cutting-edge",
@@ -62,7 +80,7 @@ BANNED_WORDS = [
 
 docs, others = [], []
 for dirpath, dirnames, filenames in os.walk("."):
-    dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+    dirnames[:] = prune(dirpath, dirnames)
     for fn in filenames:
         p = os.path.normpath(os.path.join(dirpath, fn))
         if fn.endswith(".md"):
@@ -154,22 +172,51 @@ for doc in docs:
         if "—" in stripped:
             emdash_hits.append((doc, n))
 
-# ---- 3. every doc under docs/ is linked from somewhere
-unlinked = []
-for doc in docs:
-    if doc in ("README.md",) or os.path.basename(doc) in DOC_ROOTS:
+# ---- 3. every doc is REACHABLE FROM README.md
+#
+# ⛔ "Linked from somewhere" is the weaker property and it was what this
+# check tested until review pass 6. A set of orphan pages linking only to
+# each other satisfies it while being unreachable from the entrypoint.
+#
+# ⭐ The deliverable's stated contract is that an implementer reads only
+# README.md and follows its links, so reachability from README is the
+# property that actually has to hold. This walks it.
+def outbound(path):
+    try:
+        text = strip_fences(open(path, encoding="utf-8").read())
+    except OSError:
+        return []
+    base = os.path.dirname(path)
+    out = []
+    for _, target in link_re.findall(text):
+        if target.startswith(("http://", "https://", "mailto:", "#")):
+            continue
+        clean = target.split("#", 1)[0]
+        if not clean:
+            continue
+        resolved = os.path.normpath(os.path.join(base, clean))
+        if resolved.endswith(".md") and os.path.exists(resolved):
+            out.append(resolved)
+    return out
+
+
+reachable, queue = set(), ["README.md"]
+while queue:
+    cur = queue.pop(0)
+    if cur in reachable:
         continue
-    if not doc.startswith("docs" + os.sep) and not doc.startswith("experiments" + os.sep):
-        continue
-    if doc not in linked_targets:
-        unlinked.append(doc)
+    reachable.add(cur)
+    queue.extend(outbound(cur))
+
+unlinked = [d for d in docs if d not in reachable]
 
 fails = len(broken_links) + len(broken_paths) + len(unlinked) + len(banned_hits) + len(emdash_hits)
 
 if as_json:
     print(json.dumps({
         "documents": len(docs), "broken_links": len(broken_links),
-        "broken_paths": len(broken_paths), "unlinked": len(unlinked),
+        "broken_paths": len(broken_paths), "unreachable": len(unlinked),
+        "reachable_from_readme": len(reachable),
         "banned_vocabulary": len(banned_hits), "em_dashes": len(emdash_hits),
         "failures": fails,
         "unlinked_files": sorted(unlinked),
@@ -191,7 +238,7 @@ else:
             print(f"  {doc}: `{s}`")
         print()
     if unlinked:
-        print(f"PAGES NOTHING LINKS TO ({len(unlinked)})")
+        print(f"PAGES UNREACHABLE FROM README.md ({len(unlinked)})")
         for doc in sorted(unlinked):
             print(f"  {doc}")
         print()
@@ -206,7 +253,8 @@ else:
             print(f"  {doc}:{n}")
         print()
     if fails == 0 and not quiet:
-        print("all links resolve, all cited paths exist, every page is reachable")
+        print(f"all links resolve, all cited paths exist, and all {len(reachable)}")
+        print("pages are reachable by following links from README.md")
 
 sys.exit(1 if fails else 0)
 PY

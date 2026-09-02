@@ -168,9 +168,14 @@ sh tools/count-requirements.sh --check
 
 1. a relative link that resolves to nothing;
 2. a cited path that does not exist;
-3. ⭐ a page under `docs/` that nothing links to;
+3. ⭐ a page **not reachable by following links from `README.md`**;
 4. banned vocabulary;
 5. an em dash.
+
+⚠ **Rule 3 used to be "a page nothing links to", which is weaker.** Two orphan
+pages linking to each other satisfy it while being unreachable from the
+entrypoint, and the deliverable's contract is that an implementer reads
+`README.md` and follows its links. The check now walks that graph.
 
 `check-consistency.sh` refuses a disagreement between a document that
 **declares** something and one that **uses** it:
@@ -179,7 +184,9 @@ sh tools/count-requirements.sh --check
 2. an `opk` verb absent from [`client/cli.md`](client/cli.md);
 3. ⭐ a `§N` citation naming a section the target does not have;
 4. an `R`, `I` or `Q` identifier that was never defined;
-5. a tool version contradicting the pin in `experiments/00-fetch-tools.sh`.
+5. a tool version contradicting the pin in `experiments/00-fetch-tools.sh`;
+6. an assertion count that disagrees with what the experiment recorded;
+7. ⛔ an evidence file in `experiments/out/` that is no longer text.
 
 ⛔ **It prints how many claims each check examined.** A check that matched
 nothing exits 1 rather than reporting a clean tree: see §4 and

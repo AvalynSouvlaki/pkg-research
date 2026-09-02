@@ -17,8 +17,9 @@
 #     that file alone;
 #   - a citation named migration.md §6, which does not exist.
 #
-# Six checks, each an agreement between a document that DECLARES something
-# and every document that USES it:
+# Seven checks. Six are an agreement between a document that DECLARES
+# something and every document that USES it; the seventh checks that the
+# evidence those agreements rest on is still readable:
 #
 #   1. media types      declared in docs/registry/media-types.md
 #   2. CLI verbs        declared in docs/client/cli.md §3
@@ -28,6 +29,8 @@
 #                       experiments/00-fetch-tools.sh
 #   6. assert counts    "N assertions" for an experiment matches the count
 #                       that experiment recorded in experiments/out/
+#   7. evidence intact  every file in experiments/out/ is text, not a record
+#                       corrupted by a second writer
 #
 # ⛔ WHAT IT CANNOT CATCH: two documents that describe the same BEHAVIOUR
 # differently in prose. There is no declaring file to check against, so that
@@ -63,11 +66,28 @@ import json, os, re, sys
 quiet = os.environ.get("QUIET") == "1"
 as_json = os.environ.get("JSON") == "1"
 
-SKIP_DIRS = {".git", ".tmp", "references", "node_modules", "out", ".work"}
+# ⛔ Prune by PATH, not by basename. Pruning every directory named
+# "references" also pruned docs/history/references/, a 16 KB authored
+# document in this tree, which was silently exempt from every check here
+# until review pass 6 counted the files by hand. The mined corpus this
+# means to skip is the one at the repository root.
+SKIP_NAMES = {".git", ".tmp", "node_modules", "out", ".work"}
+SKIP_PATHS = {os.path.normpath("./references")}
+
+
+def prune(dirpath, dirnames):
+    keep = []
+    for d in dirnames:
+        if d in SKIP_NAMES:
+            continue
+        if os.path.normpath(os.path.join(dirpath, d)) in SKIP_PATHS:
+            continue
+        keep.append(d)
+    return keep
 
 docs = []
 for dirpath, dirnames, filenames in os.walk("."):
-    dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+    dirnames[:] = prune(dirpath, dirnames)
     for fn in filenames:
         if fn.endswith(".md"):
             docs.append(os.path.normpath(os.path.join(dirpath, fn)))
@@ -315,10 +335,24 @@ OUT_DIR = os.path.join("experiments", "out")
 recorded = {}          # experiment stem -> passed count
 if os.path.isdir(OUT_DIR):
     for fn in sorted(os.listdir(OUT_DIR)):
+        path = os.path.join(OUT_DIR, fn)
+        # ⛔ An evidence file must be text.
+        #
+        # Each experiment `tee`s its own out/*.txt. Re-running one with a
+        # shell redirect to that same path gives the file two writers, and
+        # the result is the correct output followed by a block of NUL bytes.
+        # Three files in this directory were in that state, and every check
+        # still passed because nothing read past the counts. A corrupted
+        # record that reports success is worse than a missing one.
+        seen("evidence-intact")
+        raw = open(path, "rb").read()
+        if any(b < 9 or 13 < b < 32 for b in raw):
+            fail("evidence-intact", path,
+                 "contains non-text bytes; re-run the experiment without "
+                 "redirecting stdout to this path, which it writes itself")
         if not fn.endswith(".txt"):
             continue
-        m = re.search(r'^checks passed\s+(\d+)\s*$',
-                      read(os.path.join(OUT_DIR, fn)), re.M)
+        m = re.search(r'^checks passed\s+(\d+)\s*$', read(path), re.M)
         if m:
             recorded[fn[:-4]] = int(m.group(1))
 
@@ -376,7 +410,8 @@ else:
         # ⛔ A check that examined nothing has rotted, whatever its patterns
         # once matched. That is a failure of the checker, not a clean tree.
         empty = [c for c in ("media-type", "cli-verb", "section-ref",
-                             "identifier", "tool-version", "assert-count")
+                             "identifier", "tool-version", "assert-count",
+                             "evidence-intact")
                  if examined.get(c, 0) == 0]
         if empty:
             print()

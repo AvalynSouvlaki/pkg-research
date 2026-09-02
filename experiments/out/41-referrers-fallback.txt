@@ -1,9 +1,9 @@
 # referrers fallback
 
-date_utc      2026-09-02T08:05:41Z
+date_utc      2026-09-02T10:02:02Z
 registry      zot on 127.0.0.1:15001 (distribution-spec 1.1.0)
-subject       sha256:1719552104c619b6558e7b89ecf7fd68def7a74f820c2459e2f13b7b90e0a61c
-fallback tag  sha256-1719552104c619b6558e7b89ecf7fd68def7a74f820c2459e2f13b7b90e0a61c
+subject       sha256:2d134baf00c5dc950c50fa093985201b3c78673557eadd51be94e46f9565d0d8
+fallback tag  sha256-2d134baf00c5dc950c50fa093985201b3c78673557eadd51be94e46f9565d0d8
 referrers via API           2
 referrers via fallback tag  2
 

@@ -1,7 +1,7 @@
 # static linkage matrix
 
 host      Linux 6.18.44-fc-v22 x86_64
-date_utc  2026-09-02T07:59:19Z
+date_utc  2026-09-02T08:27:22Z
 epoch     SOURCE_DATE_EPOCH=1700000000
 probe     tools/elfprobe.py (reads the artifact, not the compiler)
 
@@ -22,7 +22,7 @@ Zig         | zig build-exe -target x86_64-linux-musl  |      12952 | x86_64   |
 C via zig   | zig cc -target x86_64-linux-musl         |     204192 | x86_64   | -                                  | no       | ok
 Fortran     | gfortran -static                         |    1220024 | x86_64   | -                                  | yes      | ok
 Ada         | gnatmake -largs -static                  |    1347848 | x86_64   | -                                  | yes      | ok
-D           | gdc -static                              | BUILD-FAILED | -        | -                                  | -        | -
+D           | gdc -static glibc (EXPECTED LINK FAILURE) |          - | -        | undefined __tls_get_addr           | -        | -
 
 PT_INTERP '-' means no dynamic loader is named: the binary runs on a
 host that supplies none. Any other value is the exact path the host

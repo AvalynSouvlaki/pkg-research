@@ -25,6 +25,11 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUT="${HERE}/out"; WORK="${HERE}/.work/static-matrix"
 PROBE="${HERE}/../tools/elfprobe.py"
 mkdir -p "${OUT}" "${WORK}" || exit 2
+# Tools fetched by 00-fetch-tools.sh live here. Anything already on PATH
+# wins, so a host with its own zig or oras uses that.
+PATH="${PATH}:$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.tmp/bin"
+export PATH
+
 [ -f "${PROBE}" ] || { echo "missing ${PROBE}" >&2; exit 2; }
 
 # Normalise everything that leaks a machine or a clock into an artifact.

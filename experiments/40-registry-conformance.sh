@@ -25,6 +25,11 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUT="${HERE}/out"; mkdir -p "${OUT}" || exit 2
+# Tools fetched by 00-fetch-tools.sh live here. Anything already on PATH
+# wins, so a host with its own zig or oras uses that.
+PATH="${PATH}:$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.tmp/bin"
+export PATH
+
 WORK="$(mktemp -d)"; trap 'rm -rf "${WORK}"' EXIT
 
 REGISTRY="${REGISTRY:-ghcr.io}"

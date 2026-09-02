@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+# check-links.sh - the mechanical half of reviewing this documentation tree.
+#
+# ⭐ WHAT DEFECT THIS CATCHES
+#
+# Four failure modes, each of which has been observed in documentation sets
+# and none of which a reading reliably catches:
+#
+#   1. A relative link that resolves to nothing. The reader follows it and
+#      finds a 404, which teaches them to stop following links.
+#   2. A cited path that does not exist. A document naming a file is making a
+#      claim, and an unchecked claim rots the first time something is renamed.
+#   3. A page nothing links to. Unlinked means unread, which means
+#      uncorrected, which is the state every stale document passes through.
+#   4. Banned vocabulary: words that assert quality instead of demonstrating
+#      it, and em dashes, which this tree does not use.
+#
+# ⛔ WHAT IT CANNOT CATCH: whether a claim is TRUE. That is a reading, and it
+# belongs to the review pass. A guard that tried to verify prose would either
+# pass vacuously or refuse legitimate writing.
+#
+# Usage:
+#   check-links.sh              check, print a report
+#   check-links.sh --quiet      only print failures
+#   check-links.sh --json       machine-readable summary
+#
+# Exit codes: 0 everything resolves, 1 a check failed, 2 could not run.
+# ⛔ Read the exit code from this process, unpiped.
+
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${ROOT}" || exit 2
+command -v python3 >/dev/null 2>&1 || { echo "python3 required" >&2; exit 2; }
+
+QUIET=0; JSON=0
+for a in "$@"; do
+  case "$a" in
+    --quiet) QUIET=1 ;;
+    --json)  JSON=1 ;;
+    -h|--help) awk 'NR>1 && /^#/ { sub(/^# ?/,""); print; next } NR>1 { exit }' "$0"; exit 0 ;;
+    *) echo "unknown argument: $a" >&2; exit 2 ;;
+  esac
+done
+
+QUIET="${QUIET}" JSON="${JSON}" python3 - <<'PY'
+import json, os, re, sys
+
+quiet = os.environ.get("QUIET") == "1"
+as_json = os.environ.get("JSON") == "1"
+
+# Files this tree authors. The mined corpus under references/ is somebody
+# else's text and is deliberately not held to these rules.
+DOC_ROOTS = ("README.md", "AGENTS.md", "CHANGELOG.md", "SECURITY.md")
+SKIP_DIRS = {".git", ".tmp", "references", "node_modules", "out", ".work"}
+
+BANNED_WORDS = [
+    "seamless", "blazing", "effortless", "robust", "powerful", "cutting-edge",
+    "state-of-the-art", "world-class", "elegant", "revolutionary",
+    "game-changing", "rock-solid", "bulletproof", "lightning-fast",
+]
+
+docs, others = [], []
+for dirpath, dirnames, filenames in os.walk("."):
+    dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+    for fn in filenames:
+        p = os.path.normpath(os.path.join(dirpath, fn))
+        if fn.endswith(".md"):
+            docs.append(p)
+        elif fn.endswith((".sh", ".py")):
+            others.append(p)
+
+link_re = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
+code_span_re = re.compile(r'`([^`\n]+)`')
+
+broken_links, broken_paths, banned_hits, emdash_hits = [], [], [], []
+linked_targets = set()
+
+for doc in docs:
+    text = open(doc, encoding="utf-8").read()
+    base = os.path.dirname(doc)
+
+    # ---- 1. relative links resolve
+    for label, target in link_re.findall(text):
+        if target.startswith(("http://", "https://", "mailto:", "#")):
+            continue
+        clean = target.split("#", 1)[0]
+        if not clean:
+            continue
+        resolved = os.path.normpath(os.path.join(base, clean))
+        linked_targets.add(resolved)
+        if not os.path.exists(resolved):
+            broken_links.append((doc, target, resolved))
+
+    # ---- 2. cited paths in code spans exist
+    # Only spans that LOOK like a repo path: contains a slash and ends in a
+    # known extension, or is a known directory. Anything else is prose in
+    # backticks and checking it would produce noise nobody acts on.
+    for span in code_span_re.findall(text):
+        s = span.strip()
+        if s.startswith(("http", "$", "-", "/", "~")) or " " in s:
+            continue
+        if not ("/" in s and re.search(r"\.(md|sh|py|toml|json|yaml|yml)$", s)):
+            continue
+        if s.startswith(("docs/", "experiments/", "tools/", "references/", ".github/")):
+            if not os.path.exists(s):
+                broken_paths.append((doc, s))
+
+    # ---- 4. banned vocabulary and em dashes, outside fenced blocks
+    in_fence = False
+    for n, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        stripped = re.sub(r'`[^`]*`', '', line)
+        low = stripped.lower()
+        for w in BANNED_WORDS:
+            if re.search(rf'\b{re.escape(w)}\b', low):
+                banned_hits.append((doc, n, w))
+        if "—" in stripped:
+            emdash_hits.append((doc, n))
+
+# ---- 3. every doc under docs/ is linked from somewhere
+unlinked = []
+for doc in docs:
+    if doc in ("README.md",) or os.path.basename(doc) in DOC_ROOTS:
+        continue
+    if not doc.startswith("docs" + os.sep) and not doc.startswith("experiments" + os.sep):
+        continue
+    if doc not in linked_targets:
+        unlinked.append(doc)
+
+fails = len(broken_links) + len(broken_paths) + len(unlinked) + len(banned_hits) + len(emdash_hits)
+
+if as_json:
+    print(json.dumps({
+        "documents": len(docs), "broken_links": len(broken_links),
+        "broken_paths": len(broken_paths), "unlinked": len(unlinked),
+        "banned_vocabulary": len(banned_hits), "em_dashes": len(emdash_hits),
+        "failures": fails,
+        "unlinked_files": sorted(unlinked),
+        "broken_link_targets": [t for _, t, _ in broken_links],
+    }, indent=2))
+else:
+    if not quiet:
+        print(f"documents scanned      {len(docs)}")
+        print(f"scripts scanned        {len(others)}")
+        print()
+    if broken_links:
+        print(f"BROKEN LINKS ({len(broken_links)})")
+        for doc, target, resolved in sorted(broken_links):
+            print(f"  {doc}: [{target}] -> {resolved}")
+        print()
+    if broken_paths:
+        print(f"CITED PATHS THAT DO NOT EXIST ({len(broken_paths)})")
+        for doc, s in sorted(set(broken_paths)):
+            print(f"  {doc}: `{s}`")
+        print()
+    if unlinked:
+        print(f"PAGES NOTHING LINKS TO ({len(unlinked)})")
+        for doc in sorted(unlinked):
+            print(f"  {doc}")
+        print()
+    if banned_hits:
+        print(f"BANNED VOCABULARY ({len(banned_hits)})")
+        for doc, n, w in sorted(banned_hits):
+            print(f"  {doc}:{n}: {w}")
+        print()
+    if emdash_hits:
+        print(f"EM DASHES ({len(emdash_hits)})")
+        for doc, n in sorted(emdash_hits):
+            print(f"  {doc}:{n}")
+        print()
+    if fails == 0 and not quiet:
+        print("all links resolve, all cited paths exist, every page is reachable")
+
+sys.exit(1 if fails else 0)
+PY

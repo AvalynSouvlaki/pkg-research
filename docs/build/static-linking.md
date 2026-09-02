@@ -100,10 +100,10 @@ reproducibility-focused build uses when it does not want the field at all.
 | --- | --- | --- |
 | designed for static linking | ⭐ yes | no |
 | static size, measured | ⭐ 17,816 | 785,360 |
-| NSS in a static binary | ⭐ built-in resolver | ⛔ unavailable |
+| NSS in a static binary | ⭐ built-in resolver | ⛔ ⚠ **worse than unavailable**: host-dependent. See §3.1. |
 | `dlopen` in a static binary | ⛔ not supported | ⛔ works badly and is warned about |
 | locale support | ⚠ C and C.UTF-8 only | full |
-| `iconv` character sets | ⚠ a small set | very large |
+| `iconv` character sets | ⚠ a small set | ⛔ **1 of 12 when statically linked**, or a crash. See §3.1. |
 | performance of `malloc` | ⚠ slower under heavy multithreaded churn | faster |
 | licence | MIT | LGPL, ⚠ and see §6 |
 | compatibility with glibc-only software | ⚠ needs porting sometimes | total |
@@ -125,6 +125,29 @@ reproducibility-focused build uses when it does not want the field at all.
   documented rather than measured.
 - **Backtraces.** No `backtrace()`. Crash handlers that print a stack trace
   produce nothing.
+
+### 3.1 ⛔ Two rows above were corrected, and the correction matters
+
+⛔ **This document said a static glibc binary "silently loses" NSS lookups, and
+that glibc offers "very large" iconv coverage.** Both were reasoned from the
+specification and neither was measured off this host. `polaris0xff/glibc-research`
+measured both across 11 distributions pinned by digest, and both are wrong in
+the same direction: the real failure is louder and host-dependent.
+
+| | measured, by them |
+| --- | --- |
+| ⛔ NSS | a plain `gcc -static` glibc binary **loaded host `libnss_*.so.2` on 5 of 11**, and **died with SIGFPE on 2 of 11** (Arch, openSUSE Leap 15.6). ⚠ One of the five is a musl distribution. |
+| ⛔ iconv | **1 of 12 encodings opened** on 8 distributions; the process **died on Debian 11, Debian 12 and Ubuntu 20.04** |
+
+⭐ **The consequence is a supply-chain statement, not a compatibility note.** A
+host shared object carrying `DT_NEEDED libc.so.6` enters a process built to have
+no libc but its own, and which host decides whether that happens.
+
+⭐ **It makes [`../decisions/0003-static-musl-default.md`](../decisions/0003-static-musl-default.md)
+more right, not less.** ⭐ There is a third option, and
+[`../interop/glibc-research.md`](../interop/glibc-research.md) is the whole
+account: the evidence, what transfers each way, and what neither project has
+shown.
 
 ---
 
@@ -176,8 +199,11 @@ build.
 
 Covered in [`../format/dependencies.md`](../format/dependencies.md) §5.2, which
 owns it. Summary: glibc's name-service switch uses `dlopen`, so a static glibc
-binary silently loses LDAP, mDNS and `myhostname` resolution. musl and pure-Go
-resolvers do not have the problem.
+binary reaches for the host's `libnss_*.so.2` at run time. ⛔ **It does not fail
+quietly**: measured across 11 distributions it loaded host NSS modules on 5 and
+crashed on 2. §3.1, and
+[`../interop/glibc-research.md`](../interop/glibc-research.md) §2.1. musl and
+pure-Go resolvers do not have the problem.
 
 ### 5.3 Certificates
 

@@ -110,6 +110,33 @@ ls -l old/bin/rg new/bin/rg delta.zst
 ⭐ **If the delta is 5% of the artefact, it is worth building. If it is 80%, it
 is not.** Nobody here measured it.
 
+### Q14: is a `pgb` build reproducible
+
+⛔ **Blocks**: [`interop/glibc-research.md`](interop/glibc-research.md) §5, which
+otherwise recommends a toolchain whose determinism nobody has tested.
+
+`pgb`'s `--embed-locale` and `--wrap-dlopen` both **generate code at build
+time**, the latter from a symbol table produced by `nm` over the build's own
+objects. ⚠ Symbol order out of `nm` is not guaranteed stable across toolchain
+versions, and generated code is where non-determinism hides.
+
+⭐ **What would close it**: build one `pgb` artefact twice, on two hosts, and
+compare bytes. ⚠ Neither project has attempted it.
+
+### Q15: does a static glibc binary load host NSS modules on hosts nobody tested
+
+⛔ **Blocks**: nothing, and it is listed because W8 and W9 in
+[`history/README.md`](history/README.md) were exactly this shape.
+
+`polaris0xff/glibc-research` measured 11 distributions. ⚠ **11 is not all of
+them**, and the failure was host-dependent on every axis they varied, so the
+honest reading of their table is a lower bound on the problem rather than its
+extent.
+
+⭐ **What would close it**: run their experiment 20 on this tree's probe host and
+on distributions outside their set. ⚠ It needs root and `CAP_SYS_ADMIN`, because
+their test bed is `unshare --mount` plus `chroot`.
+
 ---
 
 ## 3. Design questions with no measurement to settle them

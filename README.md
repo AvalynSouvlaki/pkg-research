@@ -386,6 +386,7 @@ specification it demonstrates.
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed here, newest first |
 | [`SECURITY.md`](SECURITY.md) | the threat model of this repository itself |
 | [`AGENTS.md`](AGENTS.md) | the router, for an agent picking up this work |
+| [`LICENSE`](LICENSE) | ⭐ 0BSD. Take any of it, no attribution required. |
 
 ---
 
@@ -405,3 +406,16 @@ are not specification. The three markers ⛔ ⭐ ⚠ mean, in order: a rule whos
 violation is unrecoverable, the highest-value item on the page, and a trap that
 works until it does not. [`docs/conventions.md`](docs/conventions.md) states
 the rest, including why no number in this tree is unsourced.
+
+---
+
+## Licence
+
+⭐ **0BSD**, in [`LICENSE`](LICENSE). Copy anything here into anything, with no
+attribution and no notice to preserve. ⭐ A specification nobody may quote is a
+specification nobody adopts, and this one exists to be implemented rather than
+to be cited.
+
+⚠ **The mined corpus under [`references/`](references/) is somebody else's
+work** and carries its own terms; 0BSD covers what this repository wrote, which
+is everything outside that directory.

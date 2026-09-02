@@ -167,16 +167,24 @@ implementations, and a package **SHOULD** honour them.
 
 ### 5.2 Name resolution
 
-⛔ **A statically linked glibc binary cannot use NSS.** glibc's name-service
-switch loads `libnss_*.so` with `dlopen` at run time, and a static binary has
-no dynamic loader. The observable failure is that hostname lookup works for
-DNS and fails for anything the host resolves through `/etc/nsswitch.conf`:
-LDAP, mDNS, systemd-resolved's `myhostname`, and often the container-provided
-`/etc/hosts` handling.
+⛔ **A statically linked glibc binary reaches for the host's NSS modules, and
+what happens next depends on the host.** glibc's name-service switch loads
+`libnss_*.so` with `dlopen` at run time, naming whatever
+`/etc/nsswitch.conf` names.
+
+⛔ **This page said such a binary "cannot use NSS" and that was wrong in the
+comfortable direction.** Measured by `polaris0xff/glibc-research` across 11
+distributions pinned by digest: the host's modules **were loaded on 5 of 11**,
+including on a musl distribution, and the process **died with SIGFPE on 2 of
+11** (Arch, openSUSE Leap 15.6). ⚠ A static binary has no `PT_INTERP`, and it
+still opened a host shared object carrying `DT_NEEDED libc.so.6`.
+
+⭐ **The full evidence, and the toolchain that closes it**, are in
+[`../interop/glibc-research.md`](../interop/glibc-research.md) §2.1.
 
 | libc or runtime | behaviour when static |
 | --- | --- |
-| glibc | ⛔ NSS unavailable. A link warning is emitted and usually ignored. |
+| glibc | ⛔ ⚠ **host-dependent**: host modules loaded on 5 of 11, SIGFPE on 2. A link warning is emitted and usually ignored. |
 | musl | ⭐ its resolver is built in; reads `/etc/resolv.conf` and `/etc/hosts` directly |
 | Go with `CGO_ENABLED=0` | ⭐ pure-Go resolver, reads the same files |
 | Go with `CGO_ENABLED=1` | uses glibc's resolver, and the binary is dynamic. Measured in `experiments/20-static-matrix.sh`. |

@@ -28,11 +28,26 @@ about to make the same mistake.
 | W5 | ⛔ "`file` calls a static-pie binary dynamically linked" | 2026-09-02 | ⭐ `file` 5.45 correctly says "static-pie linked" | ⭐ running `file` against the four cases instead of asserting from memory |
 | W6 | "⛔ 33 of 72 requirements have an automated check", in `SECURITY.md` and `lessons.md` | 2026-09-02 | ⭐ **36 of 75** | ⭐ `count-requirements.sh --check` extended past its own defining document, in pass 4 |
 | W7 | ⛔ `check-consistency.sh` reporting a clean section-reference check | 2026-09-02 | ⭐ it had examined **zero** citations | ⭐ the guard-mutation test: a planted `§99` did not fail it |
+| W8 | ⛔ "a static glibc binary **silently loses** LDAP, mDNS and `myhostname` resolution" | 2026-09-02 | ⭐ it **loads the host's `libnss_*.so.2` on 5 of 11 distributions and dies with SIGFPE on 2** | ⭐ `polaris0xff/glibc-research` measured it; we had reasoned it from the specification |
+| W9 | ⛔ "`iconv` character sets: glibc, very large" | 2026-09-02 | ⭐ true of dynamic glibc; **1 of 12 encodings when statically linked**, or a crash | ⭐ the same sweep |
 
-⛔ **Seven withdrawals, five of them counting or version errors, in one
-session.** ⭐ That rate is the argument for
+⛔ **Nine withdrawals in one session.** ⭐ That rate is the argument for
 [`../conventions.md`](../conventions.md) §4 and for
 `tools/count-requirements.sh`, which derives a number rather than repeating one.
+
+⛔ **W8 and W9 are a different kind and the more serious kind.** W1 to W7 were
+errors of counting, versions or tooling, all findable from inside this
+repository. W8 and W9 are **wrong statements about how software behaves**, they
+survived six review passes, and nothing here could have caught them: the probe
+host is one distribution, and both claims are about what happens on the other
+ten. ⭐ **They were found by reading a sibling project's committed evidence.**
+[`../interop/glibc-research.md`](../interop/glibc-research.md) is the account,
+and ⚠ its §7 is explicit that we did not re-run their experiments.
+
+⭐ **The generalisable lesson**: a claim about behaviour on machines you do not
+have is not "documented", it is **inferred**, and this tree's own
+[`../conventions.md`](../conventions.md) §3 has a label for that which neither
+sentence carried.
 
 ⚠ **W3 and W6 are the same defect twice.** The first time, a coverage table was
 written from memory. The second time it was derived correctly and two *copies*

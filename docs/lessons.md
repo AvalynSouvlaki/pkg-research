@@ -7,6 +7,7 @@ What was learned here, tagged, with its source.
 | ⭐ `adopt` | do this. It was measured or it was paid for. |
 | ⛔ `avoid` | rejected, with the reason, so nobody re-derives it |
 | `future` | a good idea, not now, with what would make it now |
+| ⛔ `off-host` | ⛔ **A claim about how software behaves on a machine you do not have is inferred, not documented.** Two such claims here survived six review passes and were disproved by a sibling project measuring 11 distributions: [`interop/glibc-research.md`](interop/glibc-research.md). ⭐ Label them, or measure them. |
 | ⚠ `honest-limit` | a truth to keep documented where a user will see it |
 
 ---

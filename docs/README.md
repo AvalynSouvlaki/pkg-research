@@ -118,6 +118,7 @@ no context at all.
 | [`limits.md`](limits.md) | what is true and not going to change |
 | [`lessons.md`](lessons.md) | what was learned, tagged, with its source |
 | [`decisions/README.md`](decisions/README.md) | one record per decision: the problem, the alternatives, the cost, the consequences |
+| [`interop/glibc-research.md`](interop/glibc-research.md) | ⭐ a sibling project that makes glibc portable, ⛔ **and the two claims of ours its measurements disprove** |
 | [`history/README.md`](history/README.md) | ⛔ what was believed here and why that changed, plus the claims this repository has withdrawn |
 
 ---

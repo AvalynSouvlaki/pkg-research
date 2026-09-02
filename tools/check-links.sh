@@ -72,12 +72,32 @@ for dirpath, dirnames, filenames in os.walk("."):
 
 link_re = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
 code_span_re = re.compile(r'`([^`\n]+)`')
+fence_re = re.compile(r'^\s*```')
+
+
+def strip_fences(text):
+    """Drop fenced blocks.
+
+    ⛔ A link or a path inside a fenced block is a SPECIMEN, not a reference.
+    Checking them reported three false positives on a document showing an
+    example pull-request comment containing `[log](...)`, and a page whose
+    whole job is listing banned words as failing for containing them.
+    """
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if fence_re.match(line):
+            in_fence = not in_fence
+            out.append("")
+            continue
+        out.append("" if in_fence else line)
+    return "\n".join(out)
 
 broken_links, broken_paths, banned_hits, emdash_hits = [], [], [], []
 linked_targets = set()
 
 for doc in docs:
-    text = open(doc, encoding="utf-8").read()
+    raw = open(doc, encoding="utf-8").read()
+    text = strip_fences(raw)
     base = os.path.dirname(doc)
 
     # ---- 1. relative links resolve
@@ -100,10 +120,22 @@ for doc in docs:
         s = span.strip()
         if s.startswith(("http", "$", "-", "/", "~")) or " " in s:
             continue
+        # A glob names a set, not a file. Checking it as a path is a category
+        # error that produces noise nobody can act on.
+        if any(ch in s for ch in "*?["):
+            continue
         if not ("/" in s and re.search(r"\.(md|sh|py|toml|json|yaml|yml)$", s)):
             continue
-        if s.startswith(("docs/", "experiments/", "tools/", "references/", ".github/")):
-            if not os.path.exists(s):
+        # ⚠ Only paths in THIS repository. A citation of another project's
+        # file, which this tree does a great deal of, is evidence about them
+        # and not a claim that the file exists here. Those are written with a
+        # repository prefix, for example `pkgforge/builds build.py`, and do
+        # not match the prefixes below.
+        if s.startswith(("docs/", "experiments/", "tools/", "references/")):
+            # Resolve from the repository root OR from the citing document's
+            # own directory. A page in docs/history/ citing
+            # `references/README.md` means its own subdirectory.
+            if not (os.path.exists(s) or os.path.exists(os.path.join(base, s))):
                 broken_paths.append((doc, s))
 
     # ---- 4. banned vocabulary and em dashes, outside fenced blocks

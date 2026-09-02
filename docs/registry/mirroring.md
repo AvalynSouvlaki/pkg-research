@@ -89,8 +89,18 @@ skopeo copy --all \
 
 ⚠ **`--recursive` copies referrers where the source registry has the referrers
 API.** On GHCR it does not, so referrers must be enumerated through the
-fallback tag and copied explicitly. `experiments/50-mirror.sh` demonstrates the
-enumerate-and-copy path against a local registry.
+fallback tag and copied explicitly.
+
+⚠ **`oras cp` takes `--from-plain-http` and `--to-plain-http`, one per side,
+not `--plain-http`.** Passing the wrong one fails every copy with an error that
+reads like a network problem.
+
+⭐ **Proven by `experiments/50-mirror.sh`**, which mirrors a signed package
+between two local registries and asserts, against what came back out of the
+mirror, that the manifest digest is unchanged, that the same referrers are
+listed, that the payload is byte-identical, and ⭐ **that the original
+signature still verifies against the mirrored artefact**. 15 checks, all
+passing.
 
 ### 4.2 Registry to filesystem
 
@@ -119,7 +129,7 @@ bytes.
 | every layer digest present at the destination | every layer |
 | the fallback tag index has the same entry count | every subject |
 | a sampled layer's bytes hash to its digest | ⚠ at least one per run; a full re-hash is expensive but a sample of zero is not a check |
-| the signature still verifies against the destination copy | ⭐ every signed package |
+| the signature still verifies against the destination copy | ⭐ every signed package. Measured in `experiments/50-mirror.sh`. |
 
 ⚠ **The last check is the one that catches a mirror that transformed
 something.** If a mirror recompressed a layer, the digest changes, the manifest

@@ -37,7 +37,8 @@ run during metadata generation. Its output is unvalidated, and the live public
 index records `bash` at version `445.3p3` where upstream says `5.3p3`, observed
 2026-09-02.
 
-⭐ **Observed**, at commit `50379ab`: `docs/FORMAT.md` opens with "Nothing in
+⭐ **Observed**, at commit `50379ab`, in that repository's own format
+document: it opens with "Nothing in
 this tree executes", and `pkgforge/builds` exists as a separate repository
 carrying the build capability that removal took away.
 

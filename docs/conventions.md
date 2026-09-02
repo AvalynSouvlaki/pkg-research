@@ -169,12 +169,14 @@ either pass vacuously or refuse legitimate writing.
 
 Words that assert quality instead of demonstrating it:
 
-> seamless, blazing, effortless, robust, powerful, cutting-edge,
-> state-of-the-art, world-class, elegant, revolutionary, game-changing,
-> rock-solid, bulletproof, lightning-fast
+```text
+seamless, blazing, effortless, robust, powerful, cutting-edge,
+state-of-the-art, world-class, elegant, revolutionary, game-changing,
+rock-solid, bulletproof, lightning-fast
+```
 
-⚠ **Replace the adjective with the measurement, or delete it.** "Fast" becomes
-the number and its conditions. "Robust" becomes what it survives.
+⚠ **Replace the adjective with the measurement, or delete it.** `fast` becomes
+the number and its conditions. `robust` becomes what it survives.
 
 ⭐ **A specimen inside a code span is permitted**, and it has to be: a page that
 bans a word cannot otherwise show which one it means.

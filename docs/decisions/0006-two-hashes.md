@@ -31,7 +31,7 @@ publish. ⚠ Both are cheap relative to the download.
 
 ## Evidence
 
-⭐ **Observed**, era 3's `docs/FORMAT.md`: `[blake3]` is annotated "what soar
+⭐ **Observed**, era 3's own format document: `[blake3]` is annotated "what soar
 verifies against" and `[sha256]` "what a forge API reports, so it can be
 cross-checked". ⭐ The distinction is theirs and it is correct.
 

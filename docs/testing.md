@@ -177,6 +177,7 @@ sh tools/count-requirements.sh --check
 bash experiments/20-static-matrix.sh
 bash experiments/30-oci-pipeline.sh
 bash experiments/41-referrers-fallback.sh
+bash experiments/50-mirror.sh
 ```
 
 ⛔ **A skipped check is reported as a skip, never as a pass.** A tool that is

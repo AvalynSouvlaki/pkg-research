@@ -1,0 +1,202 @@
+[
+ {
+  "name": "yazi-26.5.6",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/yazi-26.5.6",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/yazi-26.5.6",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MveWF6aS0yNi41LjY"
+ },
+ {
+  "name": "ubi-0.10.0",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/ubi-0.10.0",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/ubi-0.10.0",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverRyZWZzL3RhZ3MvdWJpLTAuMTAuMA"
+ },
+ {
+  "name": "ruff-0.16.5",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/ruff-0.16.5",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/ruff-0.16.5",
+  "commit": {
+   "sha": "6420cb3b5815b9f9778cb1510ef49e4643f7c2e8",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/6420cb3b5815b9f9778cb1510ef49e4643f7c2e8"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvcnVmZi0wLjE2LjU"
+ },
+ {
+  "name": "ruff-0.16.3",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/ruff-0.16.3",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/ruff-0.16.3",
+  "commit": {
+   "sha": "e0b673f359787f9088f00827877701ca144f2ee5",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/e0b673f359787f9088f00827877701ca144f2ee5"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvcnVmZi0wLjE2LjM"
+ },
+ {
+  "name": "ruff-0.16.2",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/ruff-0.16.2",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/ruff-0.16.2",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvcnVmZi0wLjE2LjI"
+ },
+ {
+  "name": "nushell-0.115.1",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/nushell-0.115.1",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/nushell-0.115.1",
+  "commit": {
+   "sha": "323b686932618e9177040c80e92c554ecf690274",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/323b686932618e9177040c80e92c554ecf690274"
+  },
+  "node_id": "REF_kwDOTlqverlyZWZzL3RhZ3MvbnVzaGVsbC0wLjExNS4x"
+ },
+ {
+  "name": "nushell-0.115.0",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/nushell-0.115.0",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/nushell-0.115.0",
+  "commit": {
+   "sha": "e0b673f359787f9088f00827877701ca144f2ee5",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/e0b673f359787f9088f00827877701ca144f2ee5"
+  },
+  "node_id": "REF_kwDOTlqverlyZWZzL3RhZ3MvbnVzaGVsbC0wLjExNS4w"
+ },
+ {
+  "name": "nushell-0.114.1",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/nushell-0.114.1",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/nushell-0.114.1",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverlyZWZzL3RhZ3MvbnVzaGVsbC0wLjExNC4x"
+ },
+ {
+  "name": "miniserve-0.35.0",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/miniserve-0.35.0",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/miniserve-0.35.0",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverpyZWZzL3RhZ3MvbWluaXNlcnZlLTAuMzUuMA"
+ },
+ {
+  "name": "eza-0.23.5",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/eza-0.23.5",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/eza-0.23.5",
+  "commit": {
+   "sha": "c8511625601f55f1684c6fcc89caa6e51dae7a70",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/c8511625601f55f1684c6fcc89caa6e51dae7a70"
+  },
+  "node_id": "REF_kwDOTlqverRyZWZzL3RhZ3MvZXphLTAuMjMuNQ"
+ },
+ {
+  "name": "dummyhttp-1.1.3",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/dummyhttp-1.1.3",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/dummyhttp-1.1.3",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverlyZWZzL3RhZ3MvZHVtbXlodHRwLTEuMS4z"
+ },
+ {
+  "name": "bottom-0.14.9",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/bottom-0.14.9",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/bottom-0.14.9",
+  "commit": {
+   "sha": "34252f87d263e6a42f77061c9da8a726b57c26ee",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/34252f87d263e6a42f77061c9da8a726b57c26ee"
+  },
+  "node_id": "REF_kwDOTlqverdyZWZzL3RhZ3MvYm90dG9tLTAuMTQuOQ"
+ },
+ {
+  "name": "bottom-0.14.8",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/bottom-0.14.8",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/bottom-0.14.8",
+  "commit": {
+   "sha": "e0b673f359787f9088f00827877701ca144f2ee5",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/e0b673f359787f9088f00827877701ca144f2ee5"
+  },
+  "node_id": "REF_kwDOTlqverdyZWZzL3RhZ3MvYm90dG9tLTAuMTQuOA"
+ },
+ {
+  "name": "bottom-0.14.7",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/bottom-0.14.7",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/bottom-0.14.7",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverdyZWZzL3RhZ3MvYm90dG9tLTAuMTQuNw"
+ },
+ {
+  "name": "bingrep-0.12.1",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/bingrep-0.12.1",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/bingrep-0.12.1",
+  "commit": {
+   "sha": "c8511625601f55f1684c6fcc89caa6e51dae7a70",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/c8511625601f55f1684c6fcc89caa6e51dae7a70"
+  },
+  "node_id": "REF_kwDOTlqverhyZWZzL3RhZ3MvYmluZ3JlcC0wLjEyLjE"
+ },
+ {
+  "name": "b3sum-1.8.7",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/b3sum-1.8.7",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/b3sum-1.8.7",
+  "commit": {
+   "sha": "34252f87d263e6a42f77061c9da8a726b57c26ee",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/34252f87d263e6a42f77061c9da8a726b57c26ee"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvYjNzdW0tMS44Ljc"
+ },
+ {
+  "name": "b3sum-1.8.6",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/b3sum-1.8.6",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/b3sum-1.8.6",
+  "commit": {
+   "sha": "e0b673f359787f9088f00827877701ca144f2ee5",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/e0b673f359787f9088f00827877701ca144f2ee5"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvYjNzdW0tMS44LjY"
+ },
+ {
+  "name": "b3sum-1.8.5",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/b3sum-1.8.5",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/b3sum-1.8.5",
+  "commit": {
+   "sha": "c8511625601f55f1684c6fcc89caa6e51dae7a70",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/c8511625601f55f1684c6fcc89caa6e51dae7a70"
+  },
+  "node_id": "REF_kwDOTlqverVyZWZzL3RhZ3MvYjNzdW0tMS44LjU"
+ },
+ {
+  "name": "amdgpu_top-0.11.5",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/amdgpu_top-0.11.5",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/amdgpu_top-0.11.5",
+  "commit": {
+   "sha": "c8511625601f55f1684c6fcc89caa6e51dae7a70",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/c8511625601f55f1684c6fcc89caa6e51dae7a70"
+  },
+  "node_id": "REF_kwDOTlqvertyZWZzL3RhZ3MvYW1kZ3B1X3RvcC0wLjExLjU"
+ },
+ {
+  "name": "alist-3.63.0",
+  "zipball_url": "https://api.github.com/repos/pkgforge/builds/zipball/refs/tags/alist-3.63.0",
+  "tarball_url": "https://api.github.com/repos/pkgforge/builds/tarball/refs/tags/alist-3.63.0",
+  "commit": {
+   "sha": "9e605c4ebf643a79fb7984ddbfe25d19f1d30e74",
+   "url": "https://api.github.com/repos/pkgforge/builds/commits/9e605c4ebf643a79fb7984ddbfe25d19f1d30e74"
+  },
+  "node_id": "REF_kwDOTlqverZyZWZzL3RhZ3MvYWxpc3QtMy42My4w"
+ }
+]

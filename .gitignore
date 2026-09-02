@@ -1,0 +1,4 @@
+# Throwaway working directories. Everything here is re-creatable from
+# docs/history/references/README.md, which pins each reference commit and
+# gives the exact command that re-fetches it.
+.tmp/

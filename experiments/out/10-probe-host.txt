@@ -1,0 +1,62 @@
+# host probe
+
+date_utc      2026-09-02T07:55:38Z
+kernel        Linux 6.18.44-fc-v22 x86_64
+os            Ubuntu 24.04.4 LTS
+nproc         4
+mem_total_kb  16461068
+uid           0
+cwd_fs        ext4 29505780 used of 264212084
+
+## toolchains
+gcc          present   gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+clang        present   Ubuntu clang version 18.1.3 (1ubuntu1)
+musl-gcc     present   x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+go           present   flag provided but not defined: -version
+rustc        present   rustc 1.94.1 (e408947bf 2026-03-25)
+cargo        present   cargo 1.94.1 (29ea6fb6a 2026-03-24)
+zig          ABSENT
+python3      present   Python 3.11.15
+node         present   v22.22.2
+java         present   Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-
+dotnet       ABSENT
+nim          ABSENT
+crystal      ABSENT
+ldc2         ABSENT
+gdc          ABSENT
+dmd          ABSENT
+gnatmake     ABSENT
+gfortran     ABSENT
+swiftc       ABSENT
+ghc          ABSENT
+
+## rust targets installed
+  x86_64-unknown-linux-gnu
+  x86_64-unknown-linux-musl
+
+## supply-chain and registry tooling
+podman       present   podman version 4.9.3
+docker       present   Docker version 29.3.1, build c2be9cc
+oras         present   Error: unknown flag: --version
+skopeo       ABSENT
+crane        ABSENT
+cosign       ABSENT
+syft         ABSENT
+grype        ABSENT
+minisign     ABSENT
+age          present   1.1.1
+b3sum        ABSENT
+zstd         present   *** Zstandard CLI (64-bit) v1.5.5, by Yann Collet ***
+xz           present   xz (XZ Utils) 5.4.5
+jq           present   jq-1.7
+
+## container capability
+podman_daemon ok        4.9.3 rootless=false
+docker_daemon UNAVAILABLE
+max_user_ns   64262
+unshare_userns ok
+
+## network
+https://ghcr.io/v2/                      HTTP 401
+https://raw.githubusercontent.com        HTTP 301
+https://api.github.com                   HTTP 200

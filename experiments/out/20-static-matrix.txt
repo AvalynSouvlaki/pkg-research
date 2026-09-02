@@ -1,0 +1,29 @@
+# static linkage matrix
+
+host      Linux 6.18.44-fc-v22 x86_64
+date_utc  2026-09-02T07:59:19Z
+epoch     SOURCE_DATE_EPOCH=1700000000
+probe     tools/elfprobe.py (reads the artifact, not the compiler)
+
+LANG        | RECIPE                                   |      BYTES | ARCH     | PT_INTERP                          | BUILD-ID | RUNS
+------------|------------------------------------------|------------|----------|------------------------------------|----------|------
+C           | gcc -static (glibc)                      |     785360 | x86_64   | -                                  | yes      | ok
+C           | gcc -static-pie (glibc)                  |     822552 | x86_64   | -                                  | yes      | ok
+C           | musl-gcc -static                         |      24744 | x86_64   | -                                  | no       | ok
+C           | musl-gcc -static, stripped               |      17816 | x86_64   | -                                  | no       | ok
+C           | clang -static (glibc)                    |     793712 | x86_64   | -                                  | yes      | ok
+C++         | g++ -static -static-libstdc++            |    2330568 | x86_64   | -                                  | yes      | ok
+Rust        | cargo --target *-musl, crt-static        |     541832 | x86_64   | -                                  | yes      | Hello, world!
+Rust        | cargo --target *-gnu, crt-static         |    1393680 | x86_64   | -                                  | yes      | Hello, world!
+Go          | CGO_ENABLED=0 -trimpath -ldflags=-s -w   |    1433748 | x86_64   | -                                  | no       | ok
+Go          | CGO_ENABLED=1 + net (EXPECTED DYNAMIC)   |    3161314 | x86_64   | /lib64/ld-linux-x86-64.so.2        | no       | ok
+Go          | CGO_ENABLED=0 + net (the fix)            |    2019476 | x86_64   | -                                  | no       | ok
+Zig         | zig build-exe -target x86_64-linux-musl  |      12952 | x86_64   | -                                  | no       | ok
+C via zig   | zig cc -target x86_64-linux-musl         |     204192 | x86_64   | -                                  | no       | ok
+Fortran     | gfortran -static                         |    1220024 | x86_64   | -                                  | yes      | ok
+Ada         | gnatmake -largs -static                  |    1347848 | x86_64   | -                                  | yes      | ok
+D           | gdc -static                              | BUILD-FAILED | -        | -                                  | -        | -
+
+PT_INTERP '-' means no dynamic loader is named: the binary runs on a
+host that supplies none. Any other value is the exact path the host
+must provide.

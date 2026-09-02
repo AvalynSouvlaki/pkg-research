@@ -53,6 +53,19 @@ step() { printf '\n== %s ==\n' "$1"; }
 for t in oras jq python3 sha256sum; do
   command -v "$t" >/dev/null 2>&1 || { echo "missing required tool: $t" >&2; exit 2; }
 done
+
+# ⭐ BLAKE3 is the hash the client verifies (docs/decisions/0006-two-hashes.md),
+# and until review pass 5 no experiment computed one: every check here was
+# SHA-256, which is the hash the REGISTRY reports. A design whose load-bearing
+# hash is never exercised has an untested spine.
+#
+# ⚠ Degrade, do not fail: b3sum is not on every host. When it is absent the
+# BLAKE3 assertions are skipped and SAID to be skipped, rather than silently
+# not running.
+if [ -x "${BIN}/b3sum" ]; then B3SUM="${BIN}/b3sum"
+elif command -v b3sum >/dev/null 2>&1; then B3SUM="$(command -v b3sum)"
+else B3SUM=""
+fi
 [ -x "${BIN}/zot" ] || { echo "missing ${BIN}/zot" >&2; exit 2; }
 
 cd "${WORK}" || exit 2
@@ -115,14 +128,19 @@ python3 "${ROOT}/tools/elfprobe.py" --expect-static "stage/${PKG}" >/dev/null 2>
 step "generate metadata and checksums"
 BIN_SHA=$(sha256sum "stage/${PKG}" | cut -d' ' -f1)
 BIN_SIZE=$(stat -c %s "stage/${PKG}")
+if [ -n "${B3SUM}" ]; then
+  BIN_B3=$("${B3SUM}" --no-names "stage/${PKG}")
+else
+  BIN_B3=""
+fi
 
 cat > stage/CHECKSUMS <<EOF
 ${BIN_SHA}  ${PKG}
 EOF
 
-python3 - "$PKG" "$VER" "$REV" "$HOST_TRIPLE" "$BIN_SHA" "$BIN_SIZE" > stage/metadata.json <<'PY'
+python3 - "$PKG" "$VER" "$REV" "$HOST_TRIPLE" "$BIN_SHA" "$BIN_SIZE" "$BIN_B3" > stage/metadata.json <<'PY'
 import json, os, sys
-pkg, ver, rev, host, sha, size = sys.argv[1:7]
+pkg, ver, rev, host, sha, size, b3 = sys.argv[1:8]
 print(json.dumps({
     "schemaVersion": 1,
     "name": pkg,
@@ -132,7 +150,12 @@ print(json.dumps({
     "description": "opk pipeline demonstration package",
     "license": ["MIT"],
     "provides": [pkg],
-    "artifact": {"path": pkg, "sha256": sha, "size": int(size)},
+    # ⛔ Both hashes, with the prefixes the schema specifies. The client
+    # verifies blake3; sha256 is what a registry independently reports.
+    "artifact": dict(
+        [("path", pkg), ("sha256", "sha256:" + sha), ("size", int(size))]
+        + ([("blake3", "b3:" + b3)] if b3 else [])
+    ),
     "source": {"kind": "inline", "epoch": int(os.environ["SOURCE_DATE_EPOCH"])},
 }, indent=2, sort_keys=True))
 PY
@@ -276,8 +299,26 @@ GOT_SHA=$(sha256sum "pull/${PKG}" | cut -d' ' -f1)
   || bad "payload hash mismatch: want ${BIN_SHA} got ${GOT_SHA}"
 
 META_SHA=$(jq -r '.artifact.sha256' pull/metadata.json)
-[ "${META_SHA}" = "${GOT_SHA}" ] && ok "metadata.json agrees with the payload it describes" \
-  || bad "metadata records ${META_SHA} but payload hashes ${GOT_SHA}"
+[ "${META_SHA}" = "sha256:${GOT_SHA}" ] && ok "metadata.json agrees with the payload it describes" \
+  || bad "metadata records ${META_SHA} but payload hashes sha256:${GOT_SHA}"
+
+# ⭐ THE hash the specification says a client verifies.
+if [ -n "${B3SUM}" ]; then
+  GOT_B3=$("${B3SUM}" --no-names "pull/${PKG}")
+  META_B3=$(jq -r '.artifact.blake3 // ""' pull/metadata.json)
+  [ -n "${META_B3}" ] && ok "metadata carries a blake3 payload hash" \
+    || bad "metadata has no blake3 field; the client would have nothing to verify"
+  [ "${META_B3}" = "b3:${GOT_B3}" ] && ok "⭐ payload BLAKE3 matches the metadata (the hash the client verifies)" \
+    || bad "blake3 mismatch: metadata ${META_B3}, payload b3:${GOT_B3}"
+  # ⛔ The guard must be able to fail. A tampered byte must break it.
+  cp "pull/${PKG}" tamper.bin && printf '\x00' >> tamper.bin
+  TAMPER_B3=$("${B3SUM}" --no-names tamper.bin)
+  [ "${TAMPER_B3}" != "${GOT_B3}" ] && ok "a modified payload produces a different BLAKE3" \
+    || bad "blake3 did not change on a modified payload; the check is vacuous"
+  rm -f tamper.bin
+else
+  printf '  ⚠  b3sum absent: BLAKE3 assertions SKIPPED (run 00-fetch-tools.sh)\n'
+fi
 
 if [ "${SIGNED}" = "yes" ]; then
   SIG_DIGEST=$(printf '%s' "${REFERRERS}" | jq -r '.manifests[] | select(.artifactType=="application/vnd.opk.signature.v1") | .digest')

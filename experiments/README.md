@@ -33,10 +33,10 @@ piped into anything reports the pipeline's status.
 
 | # | question | needs | ⭐ what it establishes |
 | --- | --- | --- | --- |
-| [`00-fetch-tools.sh`](00-fetch-tools.sh) | ⚠ none: a helper | network | pinned oras, zot, cosign, syft, crane, minisign, zig |
+| [`00-fetch-tools.sh`](00-fetch-tools.sh) | ⚠ none: a helper | network | pinned oras, zot, cosign, syft, crane, minisign, zig, ⭐ b3sum |
 | [`10-probe-host.sh`](10-probe-host.sh) | ⭐ what can this machine prove, and which gates can it pass | none | ⭐ the conditions every later number is measured under |
 | [`20-static-matrix.sh`](20-static-matrix.sh) | ⭐ does each toolchain's documented static recipe actually produce a binary with no `PT_INTERP` | toolchains | ⭐ the measured table in [`../docs/build/static-linking.md`](../docs/build/static-linking.md) §2 |
-| [`30-oci-pipeline.sh`](30-oci-pipeline.sh) | ⭐ does the specified registry layout work end to end on a conformant registry | zot, oras | ⭐ **30 assertions**: build, publish, attach, sign, discover, verify, install, reproduce, fail correctly |
+| [`30-oci-pipeline.sh`](30-oci-pipeline.sh) | ⭐ does the specified registry layout work end to end on a conformant registry | zot, oras | ⭐ **33 assertions**: build, publish, attach, sign, discover, ⭐ verify BLAKE3 and the signature, install, reproduce, fail correctly |
 | [`40-registry-conformance.sh`](40-registry-conformance.sh) | ⭐ what does a real registry implement, and does it answer referrers | network | ⛔ **GHCR does not implement the referrers API**, with two controls |
 | [`41-referrers-fallback.sh`](41-referrers-fallback.sh) | ⭐ does the fallback tag carry the same job | zot, oras | ⭐ **10 assertions**: discovery with the API disabled finds the same referrers |
 | [`50-mirror.sh`](50-mirror.sh) | ⭐ does a mirrored package still verify, and is a mirror that alters something caught | zot, oras | ⭐ **15 assertions**: the original signature verifies against the mirrored artefact; a tampered mirror is refused |

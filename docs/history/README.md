@@ -214,6 +214,47 @@ reader can see.
 *behaviour* in different words. There is no declaring file to check against, so
 it stays a reading. Pass 5 is that reading.
 
+### Pass 5: the behaviour reading, 2026-09-02
+
+**Question**: where do two documents describe the same behaviour differently,
+in words no checker can compare?
+
+| swept | found |
+| --- | --- |
+| trust policy names and the default | ⭐ **agree** across nine documents: `strict`, `default`, `hash-only`, `unverified` |
+| the registry namespace and tag shape | ⭐ **agree**; the worked example matches the rule |
+| the two hashes and their prefixes | ⭐ agree in the documents; ⛔ **and not proven anywhere**, see below |
+| ⛔ `max-index-age` | ⛔ **contradiction**: the *warning* threshold in `index-and-search.md`, the *refusal* threshold in `offline-and-airgap.md`, and the offline table implied a second, earlier "stale" tier that was never given a value |
+| the exit code for a stale index | ⛔ **wrong in the fix as first written**: staleness is a freshness failure, which the table numbers **11**, not the 10 used for an absent index |
+| ⭐ every `opk` flag against the CLI specification | ⛔ **ten flags used and undeclared**, among them `--download-only`, `--pin-cache`, `--allow-epoch-change` and `--allow-stale-index` |
+| ⛔ **the hash the client verifies** | ⛔ **no experiment computed one.** See below. |
+
+⛔ **The BLAKE3 gap is the finding of this pass.**
+[`../decisions/0006-two-hashes.md`](../decisions/0006-two-hashes.md) says BLAKE3
+is what the client verifies and SHA-256 is what a registry independently
+reports. Every experiment checked SHA-256, which is the registry's hash. The
+PoC's `metadata.json` had no `blake3` field at all, and wrote its `sha256` as
+bare hex where [`../format/metadata-schema.md`](../format/metadata-schema.md)
+specifies a `sha256:` prefix, so the document the pipeline produced did not
+conform to the schema the pipeline claimed to demonstrate.
+
+⭐ **Closed rather than noted.** `b3sum` 1.8.7 is now pinned in
+`experiments/00-fetch-tools.sh` and validated against the two published BLAKE3
+test vectors; the pipeline computes the hash, writes both values with their
+prefixes, verifies BLAKE3 against the artefact **pulled back out of the
+registry**, and asserts that appending one byte changes it. 30 assertions
+became 33.
+
+⚠ **Why four passes missed it.** Every earlier pass asked whether a claim was
+*supported*. This one asked which claims had *no experiment at all* behind
+them, which is a different question: an unproven claim and a proven one read
+identically on the page.
+
+⚠ **A limit of the new checker, stated because it looks stronger than it is.**
+The section-reference check proves a cited `§N` **exists**, not that it is the
+right section. Two citations in this pass pointed at a real section that was
+the wrong one, and only reading caught them.
+
 ---
 
 ## 5. What is NOT here

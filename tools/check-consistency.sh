@@ -17,7 +17,7 @@
 #     that file alone;
 #   - a citation named migration.md §6, which does not exist.
 #
-# Five checks, each an agreement between a document that DECLARES something
+# Six checks, each an agreement between a document that DECLARES something
 # and every document that USES it:
 #
 #   1. media types      declared in docs/registry/media-types.md
@@ -26,6 +26,8 @@
 #   4. identifiers      R##, I##, Q## resolve to their defining table
 #   5. tool versions    a version cited in prose matches the pin in
 #                       experiments/00-fetch-tools.sh
+#   6. assert counts    "N assertions" for an experiment matches the count
+#                       that experiment recorded in experiments/out/
 #
 # ⛔ WHAT IT CANNOT CATCH: two documents that describe the same BEHAVIOUR
 # differently in prose. There is no declaring file to check against, so that
@@ -303,6 +305,42 @@ else:
                         fail("tool-version", f"{doc}:{n}",
                              f"{tool} {found} contradicts the pin {ver} in {PIN_FILE}")
 
+# -------------------------------------------------------- 6. assertion counts
+#
+# "33 assertions" is quoted in five documents and produced by one script. That
+# is the same shape as the requirement-count drift (W6): a derived number
+# copied by hand into pages no guard reads. The experiment records its own
+# result in experiments/out/, so the documents can be checked against it.
+OUT_DIR = os.path.join("experiments", "out")
+recorded = {}          # experiment stem -> passed count
+if os.path.isdir(OUT_DIR):
+    for fn in sorted(os.listdir(OUT_DIR)):
+        if not fn.endswith(".txt"):
+            continue
+        m = re.search(r'^checks passed\s+(\d+)\s*$',
+                      read(os.path.join(OUT_DIR, fn)), re.M)
+        if m:
+            recorded[fn[:-4]] = int(m.group(1))
+
+# ⚠ Only a sentence that ties a number to a NAMED experiment is checkable.
+# "33 assertions" on its own could be about anything.
+count_re = re.compile(r'`?(\d\d?-[a-z-]+)\.sh`?[^.\n]{0,160}?\b(\d{1,3})\s+(?:assertions|checks|passed)'
+                      r'|\b(\d{1,3})\s+(?:assertions|checks)\b[^.\n]{0,80}?`?(\d\d?-[a-z-]+)\.sh`?')
+for doc in docs:
+    if doc.startswith(os.path.join("docs", "history")):
+        continue          # records what a count WAS, by design
+    for n, line in enumerate(TEXT[doc].splitlines(), 1):
+        for a_stem, a_num, b_num, b_stem in count_re.findall(line):
+            stem, num = (a_stem, a_num) if a_stem else (b_stem, b_num)
+            match = next((k for k in recorded if k.startswith(stem.split("-")[0] + "-")), None)
+            if match is None:
+                continue
+            seen("assert-count")
+            if int(num) != recorded[match]:
+                fail("assert-count", f"{doc}:{n}",
+                     f"says {num} for {stem}.sh; {OUT_DIR}/{match}.txt recorded "
+                     f"{recorded[match]}")
+
 # ------------------------------------------------------------------- report
 by_check = {}
 for check, where, detail in failures:
@@ -338,7 +376,7 @@ else:
         # ⛔ A check that examined nothing has rotted, whatever its patterns
         # once matched. That is a failure of the checker, not a clean tree.
         empty = [c for c in ("media-type", "cli-verb", "section-ref",
-                             "identifier", "tool-version")
+                             "identifier", "tool-version", "assert-count")
                  if examined.get(c, 0) == 0]
         if empty:
             print()

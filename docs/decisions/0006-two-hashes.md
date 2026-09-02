@@ -20,6 +20,18 @@ different algorithm.
 | SHA-512 | ⚠ no advantage here |
 | ⭐ **both, with different jobs** | ⭐ chosen |
 
+## Evidence
+
+⭐ **Measured** in `experiments/30-oci-pipeline.sh`: the payload's BLAKE3 is
+computed at publish, written to `metadata.json` as `b3:<hex>`, and checked
+against the artefact **pulled back out of the registry**. A byte appended to
+the payload changes the value, which is asserted rather than assumed.
+
+⚠ **This proof did not exist until review pass 5.** Every experiment checked
+SHA-256 only, so the hash this decision calls load-bearing was never once
+exercised. ⛔ A decision with no proof behind it reads exactly like one with
+a proof behind it, which is why the gap survived four passes.
+
 ## Tradeoff
 
 ⭐ **Gained**: fast verification, and an independent value to compare against

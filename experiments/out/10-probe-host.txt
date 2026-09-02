@@ -1,21 +1,21 @@
 # host probe
 
-date_utc      2026-09-02T07:55:38Z
+date_utc      2026-09-02T09:57:03Z
 kernel        Linux 6.18.44-fc-v22 x86_64
 os            Ubuntu 24.04.4 LTS
 nproc         4
 mem_total_kb  16461068
 uid           0
-cwd_fs        ext4 29505780 used of 264212084
+cwd_fs        ext4 28455052 used of 264212084
 
 ## toolchains
 gcc          present   gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 clang        present   Ubuntu clang version 18.1.3 (1ubuntu1)
 musl-gcc     present   x86_64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
-go           present   flag provided but not defined: -version
+go           present   go version go1.24.7 linux/amd64
 rustc        present   rustc 1.94.1 (e408947bf 2026-03-25)
 cargo        present   cargo 1.94.1 (29ea6fb6a 2026-03-24)
-zig          ABSENT
+zig          present   info: Usage: zig [command] [options]
 python3      present   Python 3.11.15
 node         present   v22.22.2
 java         present   Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-
@@ -23,10 +23,10 @@ dotnet       ABSENT
 nim          ABSENT
 crystal      ABSENT
 ldc2         ABSENT
-gdc          ABSENT
+gdc          present   gdc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 dmd          ABSENT
-gnatmake     ABSENT
-gfortran     ABSENT
+gnatmake     present   GNATMAKE 13.3.0
+gfortran     present   GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 swiftc       ABSENT
 ghc          ABSENT
 
@@ -37,15 +37,15 @@ ghc          ABSENT
 ## supply-chain and registry tooling
 podman       present   podman version 4.9.3
 docker       present   Docker version 29.3.1, build c2be9cc
-oras         present   Error: unknown flag: --version
+oras         present   Version:        1.2.2
 skopeo       ABSENT
-crane        ABSENT
-cosign       ABSENT
-syft         ABSENT
+crane        present   Error: unknown flag: --version
+cosign       present   Error: unknown flag: --version
+syft         present   syft 1.18.1
 grype        ABSENT
-minisign     ABSENT
+minisign     present   minisign: unrecognized option: -
 age          present   1.1.1
-b3sum        ABSENT
+b3sum        present   b3sum 1.8.7
 zstd         present   *** Zstandard CLI (64-bit) v1.5.5, by Yann Collet ***
 xz           present   xz (XZ Utils) 5.4.5
 jq           present   jq-1.7
@@ -60,3 +60,5 @@ unshare_userns ok
 https://ghcr.io/v2/                      HTTP 401
 https://raw.githubusercontent.com        HTTP 301
 https://api.github.com                   HTTP 200
+
+written: /home/user/pkg-research/experiments/out/10-probe-host.txt

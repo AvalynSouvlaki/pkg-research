@@ -27,12 +27,20 @@ opk install ripgrep --offline
 
 | condition | behaviour |
 | --- | --- |
-| index cached, fresh | ⭐ resolve normally |
-| index cached, stale | ⚠ warn with its age; proceed |
-| index cached, older than `max-index-age` | ⛔ refuse unless `--allow-stale-index` |
+| index cached, newer than `max-index-age` | ⭐ resolve normally |
+| index cached, older than `max-index-age` | ⛔ refuse, ⚠ **exit 11, not 10**: the index exists and failed a freshness check. Unless `--allow-stale-index`, which warns with the age and proceeds |
+| ⛔ index older than one already accepted | ⛔ refuse, exit 11; ⛔ **no override**, this is rollback rather than staleness |
 | index absent | ⛔ exit 10 |
 | package blobs cached | ⭐ install, verifying as usual |
 | blobs absent | ⛔ exit 17, naming what is missing |
+
+⛔ **`max-index-age` is one threshold and the offline response differs from the
+online one**, which is why the row above says refuse where
+[`../registry/index-and-search.md`](../registry/index-and-search.md) §4 says
+warn. Both responses and the reason are in
+[`cli.md`](cli.md) §6.1. ⚠ There is no second, earlier "stale" tier: an
+earlier draft of this table implied one, and no threshold was ever defined for
+it.
 
 ⭐ **Pre-populating a cache is a supported workflow**, not an accident:
 

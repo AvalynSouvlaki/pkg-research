@@ -335,7 +335,7 @@ spec-conformant registry on loopback, builds a static binary, publishes it with
 an SBOM, provenance, a build log and a signature, discovers them through the
 registry, verifies them, installs the result, rebuilds it byte-for-byte, and
 publishes a deliberately failed build in a form no client will install. It
-made 30 assertions and passed all 30 on the host recorded in
+made 33 assertions and passed all 33 on the host recorded in
 `experiments/out/10-probe-host.txt`.
 
 [`experiments/README.md`](experiments/README.md) explains what each answers,

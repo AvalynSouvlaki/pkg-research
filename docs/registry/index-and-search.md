@@ -137,7 +137,8 @@ security update.
 | --- | --- |
 | ⭐ the signed trusted comment carries `generated` | a client compares it against the last index it saw |
 | a client **MUST** refuse an index whose `generated` is older than the one it already has | ⛔ rollback protection |
-| a client **SHOULD** warn when `generated` is more than `max-index-age` old, default 14 days | staleness is visible |
+| a client **MUST** refresh when `generated` is more than `max-index-age` old, default 14 days, and ⚠ warn with the age only if that refresh fails | ⭐ staleness is visible, and a transient network failure is not fatal |
+| ⛔ offline, the same threshold **refuses** instead | there is no refresh to attempt; [`../client/cli.md`](../client/cli.md) §6.1 |
 | the generator publishes a snapshot tag per run | a specific index can be pinned and audited |
 
 ⚠ **This is weaker than a TUF-style timestamp role and the design says so.**

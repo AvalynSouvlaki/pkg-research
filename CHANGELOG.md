@@ -29,7 +29,7 @@ technical reference [`docs/architecture.md`](docs/architecture.md).
 | --- | --- |
 | ⭐ GHCR does not implement the referrers API | `experiments/40-registry-conformance.sh`, two controls held |
 | ⭐ the fallback tag carries the same job | `experiments/41-referrers-fallback.sh`, 10 assertions |
-| ⭐ the full lifecycle works on a conformant registry | `experiments/30-oci-pipeline.sh`, 30 assertions |
+| ⭐ the full lifecycle works on a conformant registry | `experiments/30-oci-pipeline.sh`, 33 assertions |
 | ⭐ static linking, per toolchain | `experiments/20-static-matrix.sh`, 15 rows |
 
 ⛔ **What was withdrawn during writing**: five published claims, listed in

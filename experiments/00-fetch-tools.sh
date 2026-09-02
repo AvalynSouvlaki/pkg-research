@@ -31,6 +31,7 @@ SYFT_VERSION="1.18.1"
 CRANE_VERSION="0.20.2"
 MINISIGN_VERSION="0.12"
 ZIG_VERSION="0.13.0"
+B3SUM_VERSION="1.8.7"
 
 case "$(uname -m)" in
   x86_64)  GOARCH=amd64; ZIGARCH=x86_64  ;;
@@ -72,6 +73,18 @@ get zot      "https://github.com/project-zot/zot/releases/download/v${ZOT_VERSIO
 get cosign   "https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-${GOARCH}"
 get syft     "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_${GOARCH}.tar.gz" syft
 get crane    "https://github.com/google/go-containerregistry/releases/download/v${CRANE_VERSION}/go-containerregistry_Linux_$(uname -m).tar.gz" crane
+
+# ⭐ b3sum computes the hash the CLIENT verifies, per decisions/0006. It was
+# missing from this list while every experiment checked SHA-256 only, so the
+# design's load-bearing hash was never once exercised. Found in review pass 5.
+# ⚠ The published asset is a bare x86-64 binary, so there is no aarch64 build
+# to fetch here; on other architectures install b3sum from the distribution.
+if [ "${GOARCH}" = "amd64" ]; then
+  get b3sum  "https://github.com/BLAKE3-team/BLAKE3/releases/download/${B3SUM_VERSION}/b3sum_linux_x64_bin"
+else
+  have b3sum && printf '%-10s present, not fetching\n' b3sum \
+    || printf '%-10s ⚠ no published binary for %s; install from the distribution\n' b3sum "$(uname -m)"
+fi
 
 # minisign and zig unpack to a directory, so they are handled separately.
 if ! have minisign; then

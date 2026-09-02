@@ -84,7 +84,7 @@ type storing a path where a basename was expected. Neither would have appeared
 against a mock.
 
 ⭐ **The acceptance test is the lifecycle**, and it asserts against what came
-back out of the registry rather than what went in. 30 assertions, all passing
+back out of the registry rather than what went in. 33 assertions, all passing
 on the probe host.
 
 ### 5.1 The negative cases that must exist

@@ -37,7 +37,7 @@ registry account and no credentials.**
 
 ## 2. `30-oci-pipeline.sh`, step by step
 
-⭐ **The whole lifecycle in one script. 30 assertions, all passing on the probe
+⭐ **The whole lifecycle in one script. 33 assertions, all passing on the probe
 host.**
 
 | step | asserts | specification |
@@ -50,6 +50,7 @@ host.**
 | attach | ⭐ three referrers, each discoverable by `artifactType` | same §5 |
 | sign | ⭐ the signature covers the **manifest digest** | [`../security/signing-and-attestations.md`](../security/signing-and-attestations.md) §1 |
 | pull | ⭐ by digest; the payload hash matches the metadata | [`../security/trust-and-verification.md`](../security/trust-and-verification.md) §2 |
+| ⭐ BLAKE3 | ⭐ the hash the **client** verifies, and it changes on a modified byte | [`../decisions/0006-two-hashes.md`](../decisions/0006-two-hashes.md) |
 | verify | ⭐ the signature verifies, ⛔ **and a tampered digest is refused** | same |
 | install | it runs from the symlink farm | [`../client/installation-layout.md`](../client/installation-layout.md) |
 | reproduce | ⭐ byte-identical rebuild | [`../build/reproducibility.md`](../build/reproducibility.md) |
@@ -125,7 +126,7 @@ catch, and it is honest to say the untested part is the risky part.
 git clone <this repository> && cd pkg-research
 bash experiments/00-fetch-tools.sh
 bash experiments/10-probe-host.sh        # ⭐ compare against out/10-probe-host.txt
-bash experiments/30-oci-pipeline.sh      # ⭐ expect: 30 passed, 0 failed
+bash experiments/30-oci-pipeline.sh      # ⭐ expect: 33 passed, 0 failed
 ```
 
 ⚠ **Your numbers will differ from ours** wherever a toolchain version differs,

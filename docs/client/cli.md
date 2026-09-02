@@ -39,6 +39,7 @@ opk [GLOBAL] <command> [ARGS] [FLAGS]
 | `--system` | off | ⛔ system prefix; requires root; never implicit |
 | `--trust-policy P` | `default` | [`../security/trust-and-verification.md`](../security/trust-and-verification.md) §3 |
 | `--offline` | off | ⛔ fail rather than reach the network |
+| `--allow-stale-index` | off | ⛔ proceed with an index older than `max-index-age`; ⚠ offline only, §6.1 |
 | `--host TRIPLE` | detected | ⚠ for downloading, not installing, another host's build |
 | `--repository NAME` | all | restrict to one |
 | `--no-color` | auto | also honours `NO_COLOR` |
@@ -76,6 +77,15 @@ with verification off.
 | `--allow-vulnerable` | ⛔ required when an advisory matches |
 | `--allow-downgrade` | permit a lower version |
 | `--strict-requires` | ⛔ fail rather than warn on an unmet `[runtime].requires` |
+| `--download-only` | ⭐ fetch and verify into the cache, install nothing; [`offline-and-airgap.md`](offline-and-airgap.md) §2 |
+| `--pin-cache` | ⚠ mark the fetched blobs not evictable, so a later `gc` cannot undo a `--download-only` run |
+| `--desktop` | link `.desktop` files and icons; [`installation-layout.md`](installation-layout.md) §6 |
+
+**`upgrade` flags**
+
+| flag | effect |
+| --- | --- |
+| `--allow-epoch-change` | ⛔ required to cross an epoch boundary; [`client-behaviour.md`](client-behaviour.md) §4 |
 
 ### 3.2 Discovery
 
@@ -83,7 +93,7 @@ with verification off.
 | --- | --- |
 | `opk search TERM` | search names, provides, aliases; `--description`, `--category`, `--provides` narrow it |
 | `opk info NAME` | ⭐ everything known about a package |
-| `opk list` | what is installed; `--outdated`, `--orphaned` |
+| `opk list` | what is installed; `--outdated`, `--orphaned`, `--versions` for every copy on disk |
 | `opk files NAME` | the files a package installed |
 | `opk which PROGRAM` | ⭐ which package owns a program on `PATH` |
 | `opk why NAME` | ⭐ why this is installed: explicit, or a dependency of what |
@@ -94,7 +104,7 @@ with verification off.
 | command | does |
 | --- | --- |
 | ⭐ `opk verify [NAME]` | re-run the verification chain; `--explain` prints every step |
-| `opk log NAME[@VERSION]` | ⭐ fetch and print the build log |
+| `opk log NAME[@VERSION]` | ⭐ fetch and print the build log; `--failed` selects the failure record, `--host TRIPLE` picks the host |
 | `opk provenance NAME` | print the provenance attestation |
 | `opk sbom NAME` | print the SBOM; `--format spdx\|cyclonedx` |
 | `opk debug NAME` | fetch the separated debug symbols referrer; [`../build/static-linking.md`](../build/static-linking.md) §8 |
@@ -119,7 +129,7 @@ full log: ghcr.io/example/opk/ripgrep/ripgrep:14.1.1-1-riscv64-linux
 | --- | --- |
 | `opk repo add\|remove\|list\|update` | ⚠ `add` prints the key fingerprint and requires confirmation |
 | `opk update` | refresh indexes |
-| `opk gc` | ⭐ reclaim disk; `--keep N`, `--older-than DUR`, `--dry-run` |
+| `opk gc` | ⭐ reclaim disk; `--keep N`, `--older-than DUR`, `--cache-only`, `--dry-run` |
 | `opk clean` | clear the download cache |
 | `opk fsck` | ⭐ check state against the filesystem; `--repair` |
 | `opk doctor` | ⭐ diagnose a broken installation |
@@ -134,7 +144,7 @@ full log: ghcr.io/example/opk/ripgrep/ripgrep:14.1.1-1-riscv64-linux
 | --- | --- |
 | `opk new NAME --from URL` | scaffold a recipe |
 | `opk validate [PATH]` | ⛔ validate without executing anything |
-| `opk build NAME --host H` | build locally |
+| `opk build NAME --host H` | build locally; ⚠ `--no-container` runs on the host instead, which is not reproducible ([`../build/build-system.md`](../build/build-system.md) §6) |
 | `opk lint [PATH]` | style and correctness beyond schema validity |
 | `opk publish` | push a built artefact |
 | `opk resolve [NAME...]` | find newer upstream versions |
@@ -145,7 +155,7 @@ full log: ghcr.io/example/opk/ripgrep/ripgrep:14.1.1-1-riscv64-linux
 
 | command | does |
 | --- | --- |
-| `opk bundle create NAME... -o FILE` | ⭐ a self-contained transfer bundle |
+| `opk bundle create NAME... -o FILE` | ⭐ a self-contained transfer bundle; `--since DATE` and `--from-index-digest DIGEST` make it incremental |
 | `opk bundle install FILE` | install from one, verifying as usual |
 | `opk bundle verify FILE` | check without installing |
 
@@ -256,8 +266,39 @@ priority = 100
 urls = ["https://mirror.example.net/opk"]
 ```
 
+| key | default | meaning |
+| --- | --- | --- |
+| `max-index-age` | `14d` | ⭐ the freshness threshold for an index; §6.1 |
+| `max-mirror-age` | `7d` | warn when a mirror's last sync is older; [`../registry/mirroring.md`](../registry/mirroring.md) §6 |
+| `parallel` | `4` | concurrent fetches |
+| `channel` | `stable` | [`../format/package-identity.md`](../format/package-identity.md) §7 |
+
 **Precedence**, lowest to highest: built-in defaults, system config, user
 config, environment (`OPK_*`), command-line flags.
+
+### 6.1 ⚠ `max-index-age` is one threshold with two responses
+
+⛔ **The threshold is the same online and offline. What differs is what the
+client can do about it**, and conflating the two produced a contradiction in
+an earlier draft of this tree: one document called `max-index-age` the warning
+threshold and another called it the refusal threshold.
+
+| the index is | online | ⛔ `--offline` |
+| --- | --- | --- |
+| fresher than `max-index-age` | ⭐ use it | ⭐ use it |
+| older than `max-index-age` | ⛔ **refresh first.** If the refresh succeeds the question is moot; if it fails, ⚠ warn with the age and proceed | ⛔ **refuse**, exit 11, unless `--allow-stale-index` |
+| older than one already seen | ⛔ **refuse under both**, exit 11, always | ⛔ same |
+
+⭐ **Refusing online would make a transient network failure fatal**, which is
+why the online response is a warning: the client already tried the only fix
+there is. ⛔ **Warning offline would be silent breakage**, because there is no
+refresh to attempt and proceeding pins the user to an old catalogue without
+saying so.
+
+⛔ **The rollback rule is not age-based and has no override.** An index older
+than one the client has already accepted is refused under every mode and every
+policy: that is an attack, not staleness.
+[`../registry/index-and-search.md`](../registry/index-and-search.md) §4.
 
 ⛔ **A config file cannot set a trust policy weaker than the built-in default
 without an explicit `allow-weak-trust = true` beside it.** Weakening security in

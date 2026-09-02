@@ -1,12 +1,12 @@
 # oci pipeline
 
-date_utc   2026-09-02T08:02:50Z
+date_utc   2026-09-02T09:56:06Z
 registry   zot 1.1.0 on 127.0.0.1:15000
 oras       1.2.2
 subject    127.0.0.1:15000/opk/hello:1.0.0-1-x86_64-linux
-digest     sha256:d4311144c0b4d63b4e2f6e22e3286602a9f8508fe14a02822c9c0ba1e5f60b07
+digest     sha256:33a8ef938c339998ea1d25e1492b1a3ef9c3064f99061f8a656b2fe586d5381a
 payload    sha256:afb42bf28b19048dac5b970cb2474ead0f7ea02d1307a86104d18644f13a824f (17816 bytes)
 referrers  4
 
-checks passed 30
+checks passed 33
 checks failed 0

@@ -216,7 +216,7 @@ no client will install, so the person who wants to know why `foo` is missing
 for aarch64 can find out in one command.
 
 **What it costs.** Storage for logs of builds that produced nothing, and a
-retention policy to bound it ([`ops/retention.md`](ops/retention.md)).
+retention policy to bound it ([`registry/retention.md`](registry/retention.md)).
 
 ---
 

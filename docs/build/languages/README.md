@@ -68,9 +68,10 @@ with a different machine.
 | **documented** | from the toolchain's own documentation or source; not run here |
 | ⚠ **inferred** | a conclusion drawn from the two above, and labelled as a conclusion |
 
-⭐ **Six of the seventeen ecosystems were measured on the probe host**: C, C++,
-Rust, Go, Zig, Fortran and Ada, plus D's failure. The rest are documented, and
-each file says so at the top rather than letting a reader assume otherwise.
+⭐ **Seven of the seventeen files carry measured results**, produced on the
+probe host: `c-cpp`, `rust`, `go`, `zig`, `fortran`, `ada`, and `d`, whose
+result is a measured link failure. The remaining ten are documented, and each
+says so at the top rather than letting a reader assume otherwise.
 
 ⚠ **A measured row is one machine on one day.** It is stronger than a
 documented one and it is not a guarantee about your machine.

@@ -230,7 +230,7 @@ One package, from idea to installed, with the document that specifies each step.
 | 9 | a user installs it, verifying every hop | user | [`docs/client/client-behaviour.md`](docs/client/client-behaviour.md) |
 | 10 | a bot notices a new upstream version and opens a pull request | machine | [`docs/ci/update-automation.md`](docs/ci/update-automation.md) |
 | 11 | a scheduled job rebuilds and compares bytes | machine | [`docs/build/reproducibility.md`](docs/build/reproducibility.md) |
-| 12 | old versions age out under a stated retention policy | machine | [`docs/ops/retention.md`](docs/ops/retention.md) |
+| 12 | old versions age out under a stated retention policy | machine | [`docs/registry/retention.md`](docs/registry/retention.md) |
 
 ## The user lifecycle
 

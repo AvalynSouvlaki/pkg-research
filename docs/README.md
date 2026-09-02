@@ -104,7 +104,7 @@ no context at all.
 | [`ops/rate-limits.md`](ops/rate-limits.md) | registry and forge limits, measured where possible, and how the system stays under them |
 | [`ops/abuse-prevention.md`](ops/abuse-prevention.md) | what a hostile contributor can attempt, and what stops it |
 | [`ops/long-term-maintenance.md`](ops/long-term-maintenance.md) | schema evolution, deprecation, and handing the project to its next maintainer |
-| [`ops/retention.md`](ops/retention.md) | retention and garbage collection on the registry side |
+
 
 ## the rest
 

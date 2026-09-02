@@ -39,6 +39,7 @@ Set on a manifest. Says what the whole artefact is.
 | `application/vnd.opk.sbom.v1+json` | an SBOM | a package |
 | `application/vnd.opk.provenance.v1+json` | a SLSA provenance statement | a package |
 | `application/vnd.opk.buildlog.v1` | a build log | a package or a failure record |
+| `application/vnd.opk.debuginfo.v1` | separated debug symbols | a package |
 | `application/vnd.opk.buildfailure.v1+json` | ⛔ a build that produced nothing | nothing |
 | `application/vnd.opk.catalog.v1+json` | the searchable index | nothing |
 | `application/vnd.opk.bundle.v1+json` | an offline bundle | nothing |
@@ -63,6 +64,7 @@ at the address they already know.
 | `application/vnd.opk.payload.v1` | a single uncompressed file, for a one-binary package where compression is not worth a decompress step |
 | `application/vnd.opk.metadata.v1+json` | the document in [`../format/metadata-schema.md`](../format/metadata-schema.md) |
 | `application/vnd.opk.checksums.v1` | the `CHECKSUMS` file |
+| `application/vnd.opk.catalog-db.v1` | the catalogue as SQLite, per [`index-and-search.md`](index-and-search.md) §2 |
 | `application/vnd.opk.signature.minisign.v1` | a minisign `.minisig` |
 | `application/vnd.opk.signature.sigstore.v1+json` | a Sigstore bundle |
 | `application/spdx+json` | ⭐ an SBOM. A standard type, not ours. |

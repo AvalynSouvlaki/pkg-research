@@ -62,6 +62,7 @@ with verification off.
 | `opk downgrade NAME@VERSION` | install and activate an older version |
 | `opk rollback NAME` | ⭐ return to the previously active version |
 | `opk reinstall NAME` | re-fetch and re-verify at the same version |
+| `opk run [--sandbox[=PROFILE]] NAME [ARGS...]` | ⭐ run an installed program, optionally confined; [`../security/sandboxing.md`](../security/sandboxing.md) §3 |
 
 **`install` flags**
 
@@ -96,6 +97,7 @@ with verification off.
 | `opk log NAME[@VERSION]` | ⭐ fetch and print the build log |
 | `opk provenance NAME` | print the provenance attestation |
 | `opk sbom NAME` | print the SBOM; `--format spdx\|cyclonedx` |
+| `opk debug NAME` | fetch the separated debug symbols referrer; [`../build/static-linking.md`](../build/static-linking.md) §8 |
 | `opk audit` | ⭐ list installed packages matched by an advisory |
 | `opk trust list\|add\|remove\|show` | manage the trusted key set |
 
@@ -121,6 +123,10 @@ full log: ghcr.io/example/opk/ripgrep/ripgrep:14.1.1-1-riscv64-linux
 | `opk clean` | clear the download cache |
 | `opk fsck` | ⭐ check state against the filesystem; `--repair` |
 | `opk doctor` | ⭐ diagnose a broken installation |
+| `opk config get\|set\|path\|edit` | read and write `config.toml`; ⛔ `set` refuses a weaker trust policy without `allow-weak-trust`, exactly as the file does (§6) |
+| `opk migrate --from TOOL` | ⭐ adopt an existing installation; [`../migration.md`](../migration.md) §4 |
+| `opk completions SHELL` | ⚠ emit a completion script (§7) |
+| `opk env` | ⚠ emit export lines for `eval` (§7) |
 
 ### 3.5 Authoring
 

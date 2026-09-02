@@ -134,6 +134,9 @@ off, and a reviewer can ask "which requirement does this satisfy".
 | R9.4 | No banned vocabulary | same | `tools/check-links.sh` |
 | R9.5 | Every number **MUST** carry its conditions or be a dash | same | ⚠ reading |
 | R9.6 | Observed, inferred and recommended **MUST** be labelled | same | ⚠ reading |
+| R9.7 | A media type, CLI verb or identifier used anywhere **MUST** be declared in its home document | same | `tools/check-consistency.sh` |
+| R9.8 | A `§N` citation **MUST** name a section that exists | same | `tools/check-consistency.sh` |
+| R9.9 | ⛔ A check **MUST** report how many claims it examined, and exit non-zero when that is zero | same §4 | `tools/check-consistency.sh` |
 
 ---
 
@@ -148,8 +151,8 @@ sh tools/count-requirements.sh
 
 | | count |
 | --- | ---: |
-| requirements stated | 72 |
-| ⭐ with an automated check today | 33 |
+| requirements stated | 75 |
+| ⭐ with an automated check today | 36 |
 | ⚠ with `none yet` | 35 |
 | ⚠ checked by reading only | 2 |
 | ⚠ partial | 1 |
@@ -161,7 +164,7 @@ exists because of that.
 
 ⛔ **The ratio is the honest state of this repository**: a specification with
 proofs for the load-bearing mechanisms, not an implementation with a test
-suite. The 33 that are checked are the ones the design most depends on being
+suite. The 36 that are checked are the ones the design most depends on being
 true.
 
 ⭐ **An implementer's first task after the minimum path is to convert

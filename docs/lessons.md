@@ -57,4 +57,4 @@ What was learned here, tagged, with its source.
 | ⭐ `adopt` | ⭐ **State what was not established before the recommendations.** A reader who reaches the recommendation first has stopped reading. |
 | ⭐ `adopt` | **Label every claim observed, measured, inferred or recommended.** A reader needs to know which sentences survive a different machine. |
 | ⛔ `avoid` | ⛔ **Do not stack a dated correction under retired text.** Rewrite the rule; move the old wording to the history. |
-| ⚠ `honest-limit` | ⚠ **A specification with 33 automated checks out of 72 requirements is a specification, not an implementation.** Saying so is more useful than a green badge. |
+| ⚠ `honest-limit` | ⚠ **A specification with 36 automated checks out of 75 requirements is a specification, not an implementation.** Saying so is more useful than a green badge. |

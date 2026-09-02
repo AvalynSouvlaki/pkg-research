@@ -26,11 +26,19 @@ about to make the same mistake.
 | W3 | "**67** requirements, **20** checked, **45** unchecked" | 2026-09-02 | ⭐ **72, 33, 35** | ⭐ counted rather than estimated, after writing the table from memory |
 | W4 | "**six** of seventeen language ecosystems measured" | 2026-09-02 | ⭐ **seven files** | the same sentence listed seven items |
 | W5 | ⛔ "`file` calls a static-pie binary dynamically linked" | 2026-09-02 | ⭐ `file` 5.45 correctly says "static-pie linked" | ⭐ running `file` against the four cases instead of asserting from memory |
+| W6 | "⛔ 33 of 72 requirements have an automated check", in `SECURITY.md` and `lessons.md` | 2026-09-02 | ⭐ **36 of 75** | ⭐ `count-requirements.sh --check` extended past its own defining document, in pass 4 |
+| W7 | ⛔ `check-consistency.sh` reporting a clean section-reference check | 2026-09-02 | ⭐ it had examined **zero** citations | ⭐ the guard-mutation test: a planted `§99` did not fail it |
 
-⛔ **Five withdrawals, four of them counting or version errors, in one session.**
-⭐ That rate is the argument for
+⛔ **Seven withdrawals, five of them counting or version errors, in one
+session.** ⭐ That rate is the argument for
 [`../conventions.md`](../conventions.md) §4 and for
 `tools/count-requirements.sh`, which derives a number rather than repeating one.
+
+⚠ **W3 and W6 are the same defect twice.** The first time, a coverage table was
+written from memory. The second time it was derived correctly and two *copies*
+of it in other documents were not, because the guard only ever checked the
+document it lived in. ⛔ **A derived number is only as good as the set of places
+the derivation checks**, which is now the whole tree.
 
 ⚠ **Assume more remain.**
 
@@ -177,6 +185,34 @@ that can be pointed at?
 ⚠ **What pass 3 did not look at**: the documents' prose for internal
 contradiction between two files that do not link to each other. `check-links.sh`
 cannot see that, and no pass here swept for it.
+
+### Pass 4: the declarer-and-user sweep, 2026-09-02
+
+**Question**: the gap pass 3 left. Where does one document use a thing that
+another document is supposed to declare, and the two disagree?
+
+⭐ **This is the pass that produced `tools/check-consistency.sh`.** Every finding
+below was found by hand first, and each one became a check so the class stays
+closed.
+
+| swept | found |
+| --- | --- |
+| ⭐ every `application/vnd.opk.*` string against `registry/media-types.md`, which states it is the only place they are written | ⛔ **two were not in it**: `catalog-db.v1` from `index-and-search.md` and `debuginfo.v1` from `static-linking.md`. Both are real artefacts; the registry was incomplete. |
+| ⭐ every `opk` verb against `client/cli.md`, whose first line claims the command surface can be built from it alone | ⛔ **four verbs used and undeclared**: `config`, `debug`, `migrate`, `run`; and `completions` and `env` appeared only in a §7 example, not in the command tables |
+| every `§N` citation against the target's headings | ⛔ **one dangling**: a reference to `migration.md` §6, which has five sections |
+| ⭐ the `R<n>` identifier namespace | ⛔ **a collision**: `reproducibility.md` used `R1`..`R15` for sources of nondeterminism while `requirements.md` uses `R<n>.<n>` for requirements. Renamed to `D1`..`D15`. |
+| ⭐ every copy of the requirement counts | ⛔ **W6**: the defining table was regenerated and two other documents were not |
+| ⛔ the new checker against a planted defect, one per class | ⛔ **W7**: the section check had never run. It resolved each link's *label* instead of its *target*, matched nothing across 95 documents, and reported success. |
+
+⭐ **W7 is the finding worth carrying forward.** A checker that reports zero
+failures and a checker that examined zero claims print the same thing. ⛔ Every
+check in `check-consistency.sh` now prints its denominator and exits 1 when that
+denominator is zero, which is the only difference between the two states that a
+reader can see.
+
+⚠ **What pass 4 could not close**: two documents that describe the same
+*behaviour* in different words. There is no declaring file to check against, so
+it stays a reading. Pass 5 is that reading.
 
 ---
 

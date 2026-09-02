@@ -43,6 +43,7 @@ runnable proofs of the load-bearing mechanisms.
 
 ```sh
 sh tools/check-links.sh
+sh tools/check-consistency.sh
 sh tools/count-requirements.sh --check
 bash experiments/30-oci-pipeline.sh
 ```
@@ -63,7 +64,7 @@ installed means nothing about its subject was verified.
 | [`docs/README.md`](docs/README.md) | the map, one row per file |
 | [`docs/architecture.md`](docs/architecture.md) | ⭐ the technical reference. ⛔ It wins conflicts. |
 | [`experiments/`](experiments/README.md) | runnable proofs, numbered in the order written |
-| [`tools/`](tools/) | the instruments: `elfprobe.py`, `check-links.sh`, `count-requirements.sh` |
+| [`tools/`](tools/) | the instruments: `elfprobe.py`, `check-links.sh`, `check-consistency.sh`, `count-requirements.sh` |
 | [`references/`](references/) | ⭐ the mined trackers of the systems studied, kept so a claim can be re-checked |
 | [`CHANGELOG.md`](CHANGELOG.md) | what changed here, newest first |
 | [`SECURITY.md`](SECURITY.md) | the threat model of this repository itself |

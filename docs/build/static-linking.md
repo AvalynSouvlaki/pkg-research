@@ -299,7 +299,8 @@ build  ->  artifact (stripped)          published as the package
 | strip | `strip --strip-all bin/rg` |
 
 The `.debug` file is attached as a referrer with `artifactType`
-`application/vnd.opk.debuginfo.v1`, fetched by `opk debug <package>`.
+`application/vnd.opk.debuginfo.v1`, fetched by `opk debug NAME`
+([`../client/cli.md`](../client/cli.md) §3.3).
 
 ⚠ **`--add-gnu-debuglink` records a filename and a CRC, not a path.** A
 debugger finds the file through its own search path, so the client places

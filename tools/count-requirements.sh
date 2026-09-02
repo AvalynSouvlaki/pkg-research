@@ -21,6 +21,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${ROOT}" || exit 2
 DOC="${ROOT}/docs/requirements.md"
 [ -f "${DOC}" ] || { echo "missing ${DOC}" >&2; exit 2; }
 command -v python3 >/dev/null 2>&1 || { echo "python3 required" >&2; exit 2; }
@@ -92,5 +93,39 @@ for key, value in want.items():
 if not want:
     print("::error:: could not find the coverage table to compare against", file=sys.stderr)
     bad = 1
+
+# ⭐ The same pair of numbers is quoted OUTSIDE requirements.md, and those
+# copies drifted the moment three rows were added: the coverage table was
+# regenerated and SECURITY.md and lessons.md were not. Checking only the
+# defining document made the guard look green while two live pages were
+# wrong, which is the exact failure conventions.md §5 warns about.
+#
+# ⚠ docs/history/ is excluded on purpose. It records what a number WAS on a
+# date, and rewriting that would destroy the record the tree keeps.
+CITATION_PATTERNS = [
+    re.compile(r'(\d+)\s+of\s+(\d+)\s+requirements'),
+    re.compile(r'(\d+)\s+automated checks out of\s+(\d+)\s+requirements'),
+]
+
+cited = 0
+for dirpath, dirnames, filenames in os.walk("."):
+    dirnames[:] = [d for d in dirnames
+                   if d not in {".git", ".tmp", "references", "out", ".work"}]
+    if os.path.normpath(dirpath).startswith(os.path.join("docs", "history")):
+        continue
+    for fn in filenames:
+        if not fn.endswith(".md"):
+            continue
+        path = os.path.normpath(os.path.join(dirpath, fn))
+        for n, line in enumerate(open(path, encoding="utf-8"), 1):
+            for pat in CITATION_PATTERNS:
+                for c, t in pat.findall(line):
+                    cited += 1
+                    if int(t) != total or int(c) != buckets["checked"]:
+                        print(f"::error:: {path}:{n} says {c} of {t} requirements; "
+                              f"counted {buckets['checked']} of {total}", file=sys.stderr)
+                        bad = 1
+
+print(f"citations checked outside the table   {cited}")
 sys.exit(bad)
 PY

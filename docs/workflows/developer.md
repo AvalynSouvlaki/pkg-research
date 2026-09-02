@@ -88,6 +88,7 @@ Full strategy: [`../testing.md`](../testing.md).
 
 ```sh
 bash tools/check-links.sh          # ⭐ the docs' own mechanical checks
+bash tools/check-consistency.sh    # ⭐ declarer and user still agree
 bash experiments/20-static-matrix.sh
 bash experiments/30-oci-pipeline.sh
 bash experiments/41-referrers-fallback.sh
@@ -147,6 +148,7 @@ matter:
 
 ```sh
 bash tools/check-links.sh
+bash tools/check-consistency.sh
 ```
 
 ⛔ **When a rule changes, rewrite the rule.** Do not stack a dated box under the
@@ -177,6 +179,7 @@ opk doctor
 ## 8. Before you push
 
 - [ ] `bash tools/check-links.sh` exits 0
+- [ ] `bash tools/check-consistency.sh` exits 0
 - [ ] every experiment you touched still exits 0
 - [ ] ⭐ any new guard has been seen to fail on a planted defect
 - [ ] ⛔ documentation changed in the same commit as the behaviour it describes

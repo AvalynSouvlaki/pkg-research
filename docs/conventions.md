@@ -2,8 +2,9 @@
 
 How these documents are written, and what a number owes.
 
-⭐ **The mechanical half is checked by `tools/check-links.sh` and
-`tools/count-requirements.sh`. The rest is a reading.**
+⭐ **The mechanical half is checked by `tools/check-links.sh`,
+`tools/check-consistency.sh` and `tools/count-requirements.sh`. The rest is a
+reading.**
 
 ---
 
@@ -71,8 +72,17 @@ be compared to anything, which makes it worse than an absence: it invites a
 comparison that means nothing.
 
 ⭐ **Prefer a number a script derives.** `tools/count-requirements.sh` exists
-because a coverage table written from memory said 67, 20 and 45 where the real
-values were 72, 33 and 35.
+because a coverage table written from memory got all three of its numbers
+wrong; the values as published and as counted are in
+[`history/README.md`](history/README.md) W3. ⛔ **It checks every copy of
+those numbers in the tree, not just the defining table**, because the copies
+in two other documents drifted the moment three rows were added.
+
+⛔ **A check reports its denominator.** "0 failures" over nothing examined is
+indistinguishable from a clean result, and `check-consistency.sh` shipped
+exactly that defect for one commit: its section check resolved a link's label
+instead of its target, matched no citation in 95 documents, and reported
+success. ⭐ The count is now printed and an empty check exits 1.
 
 ⚠ **Two numbers in this tree were published wrong and corrected**, and they are
 listed in [`history/README.md`](history/README.md). ⛔ Assume more remain.
@@ -150,6 +160,7 @@ history.
 
 ```sh
 sh tools/check-links.sh
+sh tools/check-consistency.sh
 sh tools/count-requirements.sh --check
 ```
 
@@ -161,9 +172,26 @@ sh tools/count-requirements.sh --check
 4. banned vocabulary;
 5. an em dash.
 
+`check-consistency.sh` refuses a disagreement between a document that
+**declares** something and one that **uses** it:
+
+1. a media type absent from [`registry/media-types.md`](registry/media-types.md);
+2. an `opk` verb absent from [`client/cli.md`](client/cli.md);
+3. ⭐ a `§N` citation naming a section the target does not have;
+4. an `R`, `I` or `Q` identifier that was never defined;
+5. a tool version contradicting the pin in `experiments/00-fetch-tools.sh`.
+
+⛔ **It prints how many claims each check examined.** A check that matched
+nothing exits 1 rather than reporting a clean tree: see §4 and
+[`history/README.md`](history/README.md).
+
 ⛔ **What no check can answer is whether a claim is true.** That is a reading,
 and it belongs to the review pass. A guard that tried to verify prose would
 either pass vacuously or refuse legitimate writing.
+
+⚠ **Neither checker can see two documents that describe the same *behaviour*
+differently**, because there is no declaring file to check against. That is the
+review pass's residue and it is stated in the checker's own header.
 
 ### 9.1 Banned vocabulary
 

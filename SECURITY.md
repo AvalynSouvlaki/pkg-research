@@ -99,7 +99,7 @@ the open is how it gets fixed before anyone deploys it.
 | | |
 | --- | --- |
 | ⛔ the specified system has not been deployed | nothing here is battle-tested |
-| ⛔ 33 of 72 requirements have an automated check | [`docs/requirements.md`](docs/requirements.md) |
+| ⛔ 36 of 75 requirements have an automated check | [`docs/requirements.md`](docs/requirements.md) |
 | ⛔ ⭐ five published claims were wrong and were withdrawn | [`docs/history/README.md`](docs/history/README.md) §1 |
 | ⚠ no third party has reviewed this | |
 

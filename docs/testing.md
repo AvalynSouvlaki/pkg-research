@@ -173,6 +173,7 @@ ones.
 
 ```sh
 sh tools/check-links.sh
+sh tools/check-consistency.sh
 sh tools/count-requirements.sh --check
 bash experiments/20-static-matrix.sh
 bash experiments/30-oci-pipeline.sh

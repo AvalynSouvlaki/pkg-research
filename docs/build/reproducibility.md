@@ -35,21 +35,21 @@ them is not reproducible, and the metadata says so.
 
 | # | source of difference | control |
 | --- | --- | --- |
-| R1 | the current time | `SOURCE_DATE_EPOCH` from the source commit |
-| R2 | the build directory path | ⛔ a fixed `/build` inside the container |
-| R3 | the toolchain version | ⛔ the image pinned by digest |
-| R4 | the source | ⛔ pinned by commit, verified after fetch |
-| R5 | locale | `LC_ALL=C`, `LANG=C` |
-| R6 | timezone | `TZ=UTC` |
-| R7 | hostname, username, uid | not inherited; the container's are fixed |
-| R8 | filesystem readdir order | ⛔ every archive is byte-sorted |
-| R9 | archive metadata: mtime, uid, gid, uname, gname | normalised |
-| R10 | compressor headers | ⛔ gzip's own mtime pinned to 0; zstd carries none |
-| R11 | build-id | derived from content, so stable; or `--build-id=none` |
-| R12 | parallelism affecting link order | ⚠ toolchain-specific; see §5 |
-| R13 | ASLR affecting a pointer that reaches the output | ⚠ rare and real; see §5 |
-| R14 | ⛔ distribution packages installed at build time | **not controlled**; §4 |
-| R15 | ⛔ language dependencies fetched at build time | controlled only where the ecosystem has a lockfile |
+| D1 | the current time | `SOURCE_DATE_EPOCH` from the source commit |
+| D2 | the build directory path | ⛔ a fixed `/build` inside the container |
+| D3 | the toolchain version | ⛔ the image pinned by digest |
+| D4 | the source | ⛔ pinned by commit, verified after fetch |
+| D5 | locale | `LC_ALL=C`, `LANG=C` |
+| D6 | timezone | `TZ=UTC` |
+| D7 | hostname, username, uid | not inherited; the container's are fixed |
+| D8 | filesystem readdir order | ⛔ every archive is byte-sorted |
+| D9 | archive metadata: mtime, uid, gid, uname, gname | normalised |
+| D10 | compressor headers | ⛔ gzip's own mtime pinned to 0; zstd carries none |
+| D11 | build-id | derived from content, so stable; or `--build-id=none` |
+| D12 | parallelism affecting link order | ⚠ toolchain-specific; see §5 |
+| D13 | ASLR affecting a pointer that reaches the output | ⚠ rare and real; see §5 |
+| D14 | ⛔ distribution packages installed at build time | **not controlled**; §4 |
+| D15 | ⛔ language dependencies fetched at build time | controlled only where the ecosystem has a lockfile |
 
 ### 2.1 `SOURCE_DATE_EPOCH`
 
@@ -239,8 +239,8 @@ has that command.
 rebuilds it and compares. On the probe host the rebuild was byte-identical:
 `sha256:afb42bf28b19048d...`, asserted rather than printed.
 
-⚠ **That demonstrates R1, R2, R5, R6, R9, R10 and R11 on one machine.** It does
-**not** demonstrate R3, R14 or R15, because the same host with the same
+⚠ **That demonstrates D1, D2, D5, D6, D9, D10 and D11 on one machine.** It does
+**not** demonstrate D3, D14 or D15, because the same host with the same
 toolchain built both. Cross-host reproduction needs two runners, which this
 repository did not have.
 [`../open-questions.md`](../open-questions.md) records it with the exact CI

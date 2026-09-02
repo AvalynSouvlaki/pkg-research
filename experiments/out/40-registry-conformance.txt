@@ -1,0 +1,59 @@
+# registry conformance probe
+
+date_utc  2026-09-02T08:04:36Z
+registry  ghcr.io
+repo      pkgforge/bincache/b3sum/official/b3sum
+reference HEAD-c54ee7e-251030T105114-x86_64-linux
+
+## /v2/ base endpoint
+status                       401   (401 is normal: it means auth is required, not that it is down)
+docker-distribution-api-version registry/2.0
+oci-subject header support   0
+0 (only meaningful on a push response)
+
+## control A: tag resolves, and the digest we compute is the digest it reports
+GET manifests/TAG            HTTP 200
+registry Docker-Content-Digest sha256:25b4c733c69fde9568d8eda5cc9358e72ad5e5b15c2ce6bb23f33f4235e3e17c
+digest we computed             sha256:25b4c733c69fde9568d8eda5cc9358e72ad5e5b15c2ce6bb23f33f4235e3e17c
+control A                    HELD
+
+## control B: that digest is addressable as a manifest
+GET manifests/DIGEST         HTTP 200
+control B                    HELD
+
+## test: the referrers API, on a digest both controls just proved real
+GET referrers/DIGEST         HTTP 404
+body                         {"errors":[{"code":"MANIFEST_UNKNOWN","message":"manifest unknown"}]}
+VERDICT                      referrers API NOT IMPLEMENTED on this registry
+
+## fallback tag scheme (distribution-spec: referrers may be an index at tag sha256-HEX)
+GET manifests/sha256-25b4c733c69fde9568d...  HTTP 404
+fallback index present       no - this repository publishes no referrers by either route
+
+## the manifest this repository actually publishes
+{
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "artifactType": null,
+  "config": "application/vnd.oci.empty.v1+json",
+  "layers": 15,
+  "layer_mediatypes": [
+    "application/vnd.oci.image.layer.v1.tar"
+  ],
+  "titles": [
+    "b3sum",
+    "b3sum.sig",
+    "CHECKSUM",
+    "CHECKSUM.sig",
+    "LICENSE",
+    "LICENSE.sig",
+    "SBUILD",
+    "SBUILD.sig",
+    "b3sum.png",
+    "b3sum.json",
+    "b3sum.json.sig",
+    "b3sum.log",
+    "b3sum.log.sig",
+    "b3sum.version",
+    "b3sum.version.sig"
+  ]
+}
